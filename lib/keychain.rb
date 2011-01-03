@@ -22,7 +22,7 @@ class Item
   # @note This method asks only for the metadata to be returned and thus
   #  does not need user authorization to get results.
   # Returns true if there are any item matching the given attributes.
-  # @raise [Exception] for unexpected errors
+  # @raise [KeychainException] for unexpected errors
   # @return [true,false]
   def exists?
     result = Pointer.new :id
@@ -44,6 +44,7 @@ class Item
 
 end
 
+# A trivial exception class that exists because it has a unique name.
 class KeychainException < Exception
 end
 
