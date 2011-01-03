@@ -8,6 +8,25 @@ Reference
 
 To learn more about using the Keychain on OS X, see Apple's [Keychain Services Programming Guide](http://developer.apple.com/library/ios/#documentation/Security/Conceptual/keychainServConcepts/01introduction/introduction.html) and the [Keychain Services Reference](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html).
 
+Example Usage
+=============
+
+        # get an item
+        item = Keychain::Item.new
+
+        # add some search criteria, you need at least one, options are listed
+        # in the keychain services reference 'Attribute Item Keys and Values'
+        # section (link above)
+        item.attributes.merge!({
+                KSecAttrProtocol => KSecAttrProtocolHTTPS,
+                KSecAttrServer   => 'github.com'
+        })
+
+        # print the password if the entry exists
+        if item.exists?
+           puts item.password
+        end
+
 Contributing to keychain
 ========================
 
