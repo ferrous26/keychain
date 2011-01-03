@@ -25,11 +25,14 @@ Example Usage
         # work with the entry if it exists
         if item.exists?
 
-           # print the account name (user name)
-           puts item.metadata[KSecAttrAccount]
+           # cache all the metadata and print the account name (user name)
+           puts item.metadata![KSecAttrAccount]
 
            # print the password
            puts item.password
+
+        else
+           puts 'No such item exists, maybe you need different criteria?'
         end
 
 Contributing to keychain

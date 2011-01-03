@@ -4,14 +4,18 @@ framework 'Foundation'
 # Mac OS X keychain.
 module Keychain
 
-# @note Methods that actually access passwords instead of metadata require a
-#  users excplicit authorization in order to work. In these cases, the OS
+# @note Methods only need a user's explicit authorization if they want the
+#  password data, metadata does not need permission. In these cases, the OS
 #  should present an alert asking to allow, deny, or always allow the script
 #  to access. You need to be careful when using 'always allow' if you are
 #  running this code from interactive ruby or the regular interpreter because
 #  you could accidentally allow any future script to not require permission
 #  to access any password in the keychain.
 # Represents an entry in keychain.
+#
+# The big assumption that this class makes is that you only ever want
+# to work with a single keychain item; whether it be searching for metadata,
+# getting passwords, or adding a new entry.
 class Item
 
   # @return [Hash]
@@ -36,8 +40,7 @@ class Item
     @attributes.merge! attributes if attributes
   end
 
-  # @note This method asks only for the metadata to be returned and thus
-  #  does not need user authorization to get results.
+  # @note This method asks only for the metadata and doesn't need authorization
   # Returns true if there are any item matching the given attributes.
   # @raise [KeychainException] for unexpected errors
   # @return [true,false]
@@ -59,11 +62,12 @@ class Item
     end
   end
 
-  # @todo find out what is returned for blank passwords (empty string or nil)
-  # @note This method needs authorization.
   # @note We ask for an NSData object here in order to get the password.
   # Returns the password for the first match found, raises an error if
   # no keychain item is found.
+  #
+  # Blank passwords should come back as an empty string, but that hasn't
+  # been tested.
   # @raise [KeychainException]
   # @return [String] UTF8 encoded password string
   def password
@@ -83,7 +87,6 @@ class Item
   end
 
 
-  # @note This method does not need authorization.
   # Get all the metadata about a keychain item, they will be keyed
   # according Apple's documentation.
   # @raise [KeychainException]
@@ -104,7 +107,6 @@ class Item
     end
   end
 
-  # @note This method does not need authorization.
   # Update attributes to include all the metadata from the keychain.
   # @raise [KeychainException]
   # @return [Hash]
@@ -113,8 +115,8 @@ class Item
   end
 end
 
-# A trivial exception class that exists to differentiate where exceptions
-# are being raised.
+# A trivial exception class that exists to help differentiate where
+# exceptions are being raised.
 class KeychainException < Exception
 end
 
