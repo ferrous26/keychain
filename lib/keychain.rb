@@ -15,7 +15,9 @@ class Item
   # via accessors as well.
   # @param [Hash] attributes
   def initialize attributes = nil
-    @attributes = attributes
+    @attributes = { KSecClass => KSecClassInternetPassword }
+    @attributes.merge! attributes if attributes
+  end
   end
 
 end
