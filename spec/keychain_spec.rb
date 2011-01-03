@@ -51,5 +51,23 @@ describe 'Keychain' do
         expect { @item.exists? }.to raise_exception(Keychain::KeychainException)
       end
     end
+    describe '#password' do
+      it 'should return a string with the password' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        @item.password.class.should == String
+      end
+
+      it 'should raise an exception if no password is found' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolIRCS,
+          KSecAttrServer   => 'github.com'
+        })
+        expect { @item.password }.to raise_exception(Keychain::KeychainException)
+      end
+    end
+
   end
 end

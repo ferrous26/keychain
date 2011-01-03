@@ -1,4 +1,4 @@
-framework 'Security'
+framework 'Foundation'
 
 # Classes, modules, methods, and constants relevant to working with the
 # Mac OS X keychain.
@@ -42,6 +42,32 @@ class Item
     end
   end
 
+  # @todo find out what is returned for blank passwords (empty string or nil)
+  # @note Since this method actually needs get password data, you will need
+  #  to give the script authorization. The OS should present an alert asking
+  #  to allow/deny/always allow the script to access. You need to be careful
+  #  when using 'always allow' if you are running this code from interactive
+  #  ruby or the regular interpreter because you could accidentally allow any
+  #  future script to not require permission to get your passwords.
+  # Returns the password for the first match found, raises an error if
+  # no keychain item is found.
+  # @raise [KeychainException]
+  # @return [String] UTF8 encoded password string
+  def password
+    result = Pointer.new :id
+    search = @attributes.merge({
+      KSecMatchLimit => KSecMatchLimitOne,
+      KSecReturnData => true
+    })
+
+    case (error_code = SecItemCopyMatching(search, result))
+    when ErrSecSuccess then
+      NSString.alloc.initWithData result[0], encoding:NSUTF8StringEncoding
+    else
+      message = SecCopyErrorMessageString(error_code, nil)
+      raise KeychainException, "Error getting password: #{message}"
+    end
+  end
 end
 
 # A trivial exception class that exists because it has a unique name.
