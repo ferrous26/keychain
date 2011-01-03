@@ -17,6 +17,16 @@ class Item
   # @return [Hash]
   attr_accessor :attributes
 
+  # Direct access to the attributes hash of the keychain item.
+  def [] key
+    @attributes[key]
+  end
+
+  # Direct access to the attributes hash of the keychain item.
+  def []= key, value
+    @attributes[key] = value
+  end
+
   # You should initialize objects of this class with the attributes relevant
   # to the item you wish to work with, but you can add or remove attributes
   # via accessors as well.

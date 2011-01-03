@@ -134,6 +134,23 @@ describe 'Keychain' do
       end
     end
 
+
+    describe '#[]' do
+      it 'should be equivalent to #attributes' do
+        @item.attributes[:test] = 'test'
+        @item[:test].should == 'test'
+        @item[KSecClass].should == @item.attributes[KSecClass]
+      end
+    end
+
+
+    describe '#[]=' do
+      it 'should be equivalent to #attributes=' do
+        @item[:test] = 'test'
+        @item.attributes[:test].should == 'test'
+      end
+    end
+
   end
 
 end
