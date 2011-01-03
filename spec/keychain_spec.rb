@@ -1,10 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe 'Keychain' do
+
   describe 'Item' do
+
     before do
       @item = Keychain::Item.new
     end
+
 
     describe 'attributes attribute' do
       it 'is readable' do
@@ -29,6 +32,7 @@ describe 'Keychain' do
       end
     end
 
+
     describe '#exists?' do
       it 'returns false if the item does not exist' do
         @item.attributes.merge!({
@@ -51,6 +55,8 @@ describe 'Keychain' do
         expect { @item.exists? }.to raise_exception(Keychain::KeychainException)
       end
     end
+
+
     describe '#password' do
       it 'should return a string with the password' do
         @item.attributes.merge!({
@@ -70,4 +76,5 @@ describe 'Keychain' do
     end
 
   end
+
 end
