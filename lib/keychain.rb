@@ -4,7 +4,12 @@ framework 'Foundation'
 # Mac OS X keychain.
 module Keychain
 
-
+# @note Some methods require a users excplicit authorization in order to work.
+#  In these cases, the OS should present an alert asking to allow, deny, or
+#  always allow the script to access. You need to be careful when using
+#  'always allow' if you are running this code from interactive ruby or the
+#  regular interpreter because you could accidentally allow any future script
+#  to not require permission to access any password in the keychain.
 # Represents an entry in keychain.
 class Item
 
@@ -44,12 +49,8 @@ class Item
   end
 
   # @todo find out what is returned for blank passwords (empty string or nil)
-  # @note Since this method actually needs get password data, you will need
-  #  to give the script authorization. The OS should present an alert asking
-  #  to allow/deny/always allow the script to access. You need to be careful
-  #  when using 'always allow' if you are running this code from interactive
-  #  ruby or the regular interpreter because you could accidentally allow any
-  #  future script to not require permission to get your passwords.
+  # @note This method needs authorization to work because it actually looks for
+  #  a password.
   # @note Since we want the password we will ask for an NSData pointer to be
   #  returned instead of a Hash of attributes.
   # Returns the password for the first match found, raises an error if
