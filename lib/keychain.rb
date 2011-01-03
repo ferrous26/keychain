@@ -4,6 +4,7 @@ framework 'Foundation'
 # Mac OS X keychain.
 module Keychain
 
+
 # Represents an entry in keychain.
 class Item
 
@@ -49,6 +50,8 @@ class Item
   #  when using 'always allow' if you are running this code from interactive
   #  ruby or the regular interpreter because you could accidentally allow any
   #  future script to not require permission to get your passwords.
+  # @note Since we want the password we will ask for an NSData pointer to be
+  #  returned instead of a Hash of attributes.
   # Returns the password for the first match found, raises an error if
   # no keychain item is found.
   # @raise [KeychainException]
