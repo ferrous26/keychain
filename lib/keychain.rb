@@ -4,12 +4,13 @@ framework 'Foundation'
 # Mac OS X keychain.
 module Keychain
 
-# @note Some methods require a users excplicit authorization in order to work.
-#  In these cases, the OS should present an alert asking to allow, deny, or
-#  always allow the script to access. You need to be careful when using
-#  'always allow' if you are running this code from interactive ruby or the
-#  regular interpreter because you could accidentally allow any future script
-#  to not require permission to access any password in the keychain.
+# @note Methods that actually access passwords instead of metadata require a
+#  users excplicit authorization in order to work. In these cases, the OS
+#  should present an alert asking to allow, deny, or always allow the script
+#  to access. You need to be careful when using 'always allow' if you are
+#  running this code from interactive ruby or the regular interpreter because
+#  you could accidentally allow any future script to not require permission
+#  to access any password in the keychain.
 # Represents an entry in keychain.
 class Item
 
@@ -49,10 +50,8 @@ class Item
   end
 
   # @todo find out what is returned for blank passwords (empty string or nil)
-  # @note This method needs authorization to work because it actually looks for
-  #  a password.
-  # @note Since we want the password we will ask for an NSData pointer to be
-  #  returned instead of a Hash of attributes.
+  # @note This method needs authorization.
+  # @note We ask for an NSData object here in order to get the password.
   # Returns the password for the first match found, raises an error if
   # no keychain item is found.
   # @raise [KeychainException]
@@ -104,7 +103,8 @@ class Item
   end
 end
 
-# A trivial exception class that exists because it has a unique name.
+# A trivial exception class that exists to differentiate where exceptions
+# are being raised.
 class KeychainException < Exception
 end
 

@@ -1,5 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
+# @todo get the spec tests to use mock data
 describe 'Keychain' do
 
   describe 'Item' do
