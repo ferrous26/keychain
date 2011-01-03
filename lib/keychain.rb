@@ -72,6 +72,36 @@ class Item
       raise KeychainException, "Error getting password: #{message}"
     end
   end
+
+
+  # @note This method does not need authorization.
+  # Get all the metadata about a keychain item, they will be keyed
+  # according Apple's documentation.
+  # @raise [KeychainException]
+  # @return [Hash]
+  def metadata
+    result = Pointer.new :id
+    search = @attributes.merge({
+      KSecMatchLimit       => KSecMatchLimitOne,
+      KSecReturnAttributes => true
+    })
+
+    case (error_code = SecItemCopyMatching(search, result))
+    when ErrSecSuccess then
+      result[0]
+    else
+      message = SecCopyErrorMessageString(error_code, nil)
+      raise KeychainException, "Error getting metadata: #{message}"
+    end
+  end
+
+  # @note This method does not need authorization.
+  # Update attributes to include all the metadata from the keychain.
+  # @raise [KeychainException]
+  # @return [Hash]
+  def metadata!
+    @attributes = metadata
+  end
 end
 
 # A trivial exception class that exists because it has a unique name.

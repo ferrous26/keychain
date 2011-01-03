@@ -75,6 +75,64 @@ describe 'Keychain' do
       end
     end
 
+
+    describe '#metadata' do
+      it 'should return a hash' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        @item.metadata.class.should == Hash
+      end
+
+      it 'should raise an exception if nothing is found' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolIRCS,
+          KSecAttrServer   => 'github.com'
+        })
+        expect { @item.metadata }.to raise_exception(Keychain::KeychainException)
+      end
+
+      # this assumes the keychain item has more metadata
+      it 'should not overwrite @attributes' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        metadata = @item.metadata
+        @item.attributes.should_not == metadata
+      end
+    end
+
+
+    describe '#metadata!' do
+      it 'should return a hash' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        @item.metadata.class.should == Hash
+      end
+
+      it 'should raise an exception if nothing is found' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolIRCS,
+          KSecAttrServer   => 'github.com'
+        })
+        expect { @item.metadata }.to raise_exception(Keychain::KeychainException)
+      end
+
+      # this assumes the keychain item has more metadata
+      it 'should overwrite @attributes' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        metadata = @item.metadata!
+        @item.attributes.should == metadata
+      end
+    end
+
   end
 
 end

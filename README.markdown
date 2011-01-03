@@ -22,8 +22,13 @@ Example Usage
                 KSecAttrServer   => 'github.com'
         })
 
-        # print the password if the entry exists
+        # work with the entry if it exists
         if item.exists?
+
+           # print the account name (user name)
+           puts item.metadata[KSecAttrAccount]
+
+           # print the password
            puts item.password
         end
 
