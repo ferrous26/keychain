@@ -18,8 +18,33 @@ class Item
     @attributes = { KSecClass => KSecClassInternetPassword }
     @attributes.merge! attributes if attributes
   end
+
+  # @note This method asks only for the metadata to be returned and thus
+  #  does not need user authorization to get results.
+  # Returns true if there are any item matching the given attributes.
+  # @raise [Exception] for unexpected errors
+  # @return [true,false]
+  def exists?
+    result = Pointer.new :id
+    search = @attributes.merge({
+      KSecMatchLimit       => KSecMatchLimitOne,
+      KSecReturnAttributes => true
+    })
+
+    case (error_code = SecItemCopyMatching(search, result))
+    when ErrSecSuccess then
+      true
+    when ErrSecItemNotFound then
+      false
+    else
+      message = SecCopyErrorMessageString(error_code, nil)
+      raise KeychainException, "Error checking keychain item existence: #{message}"
+    end
   end
 
+end
+
+class KeychainException < Exception
 end
 
 end
