@@ -11,11 +11,15 @@ module Keychain
 #  running this code from interactive ruby or the regular interpreter because
 #  you could accidentally allow any future script to not require permission
 #  to access any password in the keychain.
-# Represents an entry in keychain.
+# Represents an entry in the login keychain.
 #
 # The big assumption that this class makes is that you only ever want
 # to work with a single keychain item; whether it be searching for metadata,
 # getting passwords, or adding a new entry.
+#
+# In order to be secure, this class will NEVER cache a password; any time
+# that you change a password, it will be written to the keychain immeadiately.
+
 class Item
 
   # @return [Hash]

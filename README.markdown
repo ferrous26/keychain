@@ -36,9 +36,8 @@ Example Usage
            # print the password (needs authorization)
            puts item.password
 
-           # change the password (BE CAREFUL)
-           item.password = 'test'
-           puts item.password
+           # change the password and check it (BE CAREFUL)
+           puts item.password = 'test'
 
         else
            puts 'No such item exists, maybe you need different criteria?'
