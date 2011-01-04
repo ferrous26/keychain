@@ -8,6 +8,11 @@ Reference
 
 To learn more about using the Keychain on OS X, see Apple's [Keychain Services Programming Guide](http://developer.apple.com/library/ios/#documentation/Security/Conceptual/keychainServConcepts/01introduction/introduction.html) and the [Keychain Services Reference](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html).
 
+Tips
+====
+
+* You need to be careful about what key-value pairs you have stored in an item's attributes, they can sometimes mess up searches or cause unexpected failures when saving/updating a keychain item.
+
 Example Usage
 =============
 
@@ -28,7 +33,11 @@ Example Usage
            # cache all the metadata and print the account name (user name)
            puts item.metadata![KSecAttrAccount]
 
-           # print the password
+           # print the password (needs authorization)
+           puts item.password
+
+           # change the password (BE CAREFUL)
+           item.password = 'test'
            puts item.password
 
         else

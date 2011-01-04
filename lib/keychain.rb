@@ -87,6 +87,30 @@ class Item
   end
 
 
+  # Updates the password associated with the keychain item. If the item does
+  # not exist in the keychain it will be added first.
+  # @raise [KeychainException]
+  # @param [String] new_password a UTF-8 encoded string
+  # @return [String] the saved password
+  def password= new_password
+    password_data = {
+      KSecValueData => new_password.dataUsingEncoding(NSUTF8StringEncoding)
+    }
+    if exists?
+      error_code = SecItemUpdate( @attributes, password_data )
+    else
+      error_code = SecItemAdd( @attributes.merge password_data, nil )
+    end
+
+    case error_code
+    when ErrSecSuccess then
+      password
+    else
+      message = SecCopyErrorMessageString(error_code, nil)
+      raise KeychainException, "Error updating password: #{message}"
+    end
+  end
+
   # Get all the metadata about a keychain item, they will be keyed
   # according Apple's documentation.
   # @raise [KeychainException]
