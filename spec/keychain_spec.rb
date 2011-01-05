@@ -181,6 +181,47 @@ describe 'Keychain' do
     #   end
     # end
 
+
+    describe '#update!' do
+      it 'should update fields given in the persistent keychain' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        @item.update!({ KSecAttrComment => 'test' })
+        @item.metadata[KSecAttrComment].should == 'test'
+      end
+
+      it 'should raise an exception for non-existant items' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolIRCS,
+          KSecAttrServer   => 'github.com'
+        })
+        expect {
+          @item.update!({ KSecAttrComment => 'different test' })
+        }.to raise_exception(Keychain::KeychainException)
+      end
+
+      it 'should update @attributes' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        @item.update!({ KSecAttrComment => 'toast' })
+        @item.attributes[KSecAttrComment].should == 'toast'
+      end
+
+      it 'should return the metadata of the keychain item' do
+        @item.attributes.merge!({
+          KSecAttrProtocol => KSecAttrProtocolHTTPS,
+          KSecAttrServer   => 'github.com'
+        })
+        @item.update!({
+                        KSecAttrComment => 'bread'
+                      })[KSecAttrComment].should == 'bread'
+      end
+    end
+
   end
 
 end

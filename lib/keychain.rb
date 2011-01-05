@@ -115,6 +115,28 @@ class Item
     end
   end
 
+  # @todo This method does not really fit with the rest of the API.
+  # @note This method does not need authorization unless you are
+  #  updating the password.
+  # Updates attributes of the item in the keychain. If the item does not
+  # exist yet then this method will raise an exception.
+  #
+  # Use a value of nil to remove an attribute.
+  # @param [Hash] new_attributes the attributes that you want to update
+  # @return [Hash] attributes
+  def update! new_attributes
+    result = Pointer.new :id
+    query  = @attributes.merge({ KSecMatchLimit => KSecMatchLimitOne })
+
+    case (error_code = SecItemUpdate(query, new_attributes))
+    when ErrSecSuccess then
+      metadata!
+    else
+      message = SecCopyErrorMessageString(error_code, nil)
+      raise KeychainException, "Error updating keychain item: #{message}"
+    end
+  end
+
   # Get all the metadata about a keychain item, they will be keyed
   # according Apple's documentation.
   # @raise [KeychainException]

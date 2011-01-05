@@ -39,6 +39,11 @@ Example Usage
            # change the password and check it (BE CAREFUL)
            puts item.password = 'test'
 
+           # change the user name and save to the keychain
+           # note how you do not need authorization to change the user name
+           item.update!({ KSecAttrAccount => 'test' })
+           puts item.metadata[KSecAttrAccount]
+
         else
            puts 'No such item exists, maybe you need different criteria?'
         end
