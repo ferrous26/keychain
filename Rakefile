@@ -11,7 +11,7 @@ require 'rake'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
-  gem.name = "keychain"
+  gem.name = "mr_keychain"
   gem.homepage = "http://github.com/ferrous26/keychain"
   gem.license = "MIT"
   gem.summary = %Q{Example code of how to use the Mac OS X keychain in MacRuby}
