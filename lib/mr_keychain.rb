@@ -83,7 +83,7 @@ class Item
 
     case (error_code = SecItemCopyMatching(search, result))
     when ErrSecSuccess then
-      NSString.alloc.initWithData result[0], encoding:NSUTF8StringEncoding
+      result[0].to_str
     else
       message = SecCopyErrorMessageString(error_code, nil)
       raise KeychainException, "Error getting password: #{message}"
@@ -97,9 +97,7 @@ class Item
   # @param [String] new_password a UTF-8 encoded string
   # @return [String] the saved password
   def password= new_password
-    password_data = {
-      KSecValueData => new_password.dataUsingEncoding(NSUTF8StringEncoding)
-    }
+    password_data = { KSecValueData => new_password.to_data }
     if exists?
       error_code = SecItemUpdate( @attributes, password_data )
     else
