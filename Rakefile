@@ -15,7 +15,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/ferrous26/keychain"
   gem.license = "MIT"
   gem.summary = %Q{Example code of how to use the Mac OS X keychain in MacRuby}
-  gem.description = %Q{Uses APIs new in Snow Leopard to create, read, and update keychain entries}
+  gem.description = %Q{Takes advantage of MacRuby and uses APIs new in Snow Leopard to create, read, and update keychain entries}
   gem.email = "marada@uwaterloo.ca"
   gem.authors = ["Mark Rada"]
 end

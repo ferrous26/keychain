@@ -48,6 +48,12 @@ Example Usage
            puts 'No such item exists, maybe you need different criteria?'
         end
 
+TODO
+====
+
+- Make the simple cases simpler
+- Allow more succinct names for constants and guess the actual values
+
 Contributing to keychain
 ========================
 
