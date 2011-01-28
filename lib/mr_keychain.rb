@@ -50,10 +50,10 @@ class Item
   # @return [true,false]
   def exists?
     result = Pointer.new :id
-    search = @attributes.merge({
+    search = @attributes.merge(
       KSecMatchLimit       => KSecMatchLimitOne,
       KSecReturnAttributes => true
-    })
+    )
 
     case (error_code = SecItemCopyMatching(search, result))
     when ErrSecSuccess then
@@ -76,10 +76,10 @@ class Item
   # @return [String] UTF8 encoded password string
   def password
     result = Pointer.new :id
-    search = @attributes.merge({
+    search = @attributes.merge(
       KSecMatchLimit => KSecMatchLimitOne,
       KSecReturnData => true
-    })
+    )
 
     case (error_code = SecItemCopyMatching(search, result))
     when ErrSecSuccess then
@@ -124,7 +124,7 @@ class Item
   # @return [Hash] attributes
   def update! new_attributes
     result = Pointer.new :id
-    query  = @attributes.merge({ KSecMatchLimit => KSecMatchLimitOne })
+    query  = @attributes.merge( KSecMatchLimit => KSecMatchLimitOne )
 
     case (error_code = SecItemUpdate(query, new_attributes))
     when ErrSecSuccess then
@@ -141,10 +141,10 @@ class Item
   # @return [Hash]
   def metadata
     result = Pointer.new :id
-    search = @attributes.merge({
+    search = @attributes.merge(
       KSecMatchLimit       => KSecMatchLimitOne,
       KSecReturnAttributes => true
-    })
+    )
 
     case (error_code = SecItemCopyMatching(search, result))
     when ErrSecSuccess then

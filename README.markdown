@@ -22,10 +22,10 @@ Example Usage
         # add some search criteria, you need at least one, options are listed
         # in the keychain services reference 'Attribute Item Keys and Values'
         # section (link above)
-        item.attributes.merge!({
+        item.attributes.merge!(
                 KSecAttrProtocol => KSecAttrProtocolHTTPS,
                 KSecAttrServer   => 'github.com'
-        })
+        )
 
         # work with the entry if it exists
         if item.exists?
@@ -41,7 +41,7 @@ Example Usage
 
            # change the user name and save to the keychain
            # note how you do not need authorization to change the user name
-           item.update!({ KSecAttrAccount => 'test' })
+           item.update!( KSecAttrAccount => 'test' )
            puts item.metadata[KSecAttrAccount]
 
         else
