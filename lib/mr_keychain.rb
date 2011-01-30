@@ -19,7 +19,6 @@ module Keychain
 #
 # In order to be secure, this class will NEVER cache a password; any time
 # that you change a password, it will be written to the keychain immeadiately.
-
 class Item
 
   # @return [Hash]
