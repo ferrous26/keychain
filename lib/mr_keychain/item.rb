@@ -62,8 +62,7 @@ class Item
     when ErrSecItemNotFound then
       false
     else
-      message = SecCopyErrorMessageString(error_code, nil)
-      raise KeychainException, "Error checking keychain item existence: #{message}"
+      raise KeychainException.new( 'Checking keychain item existence', error_code )
     end
   end
 
@@ -86,8 +85,7 @@ class Item
     when ErrSecSuccess then
       result[0].to_str
     else
-      message = SecCopyErrorMessageString(error_code, nil)
-      raise KeychainException, "Error getting password: #{message}"
+      raise KeychainException.new( 'Getting password', error_code )
     end
   end
 
@@ -109,8 +107,7 @@ class Item
     when ErrSecSuccess then
       password
     else
-      message = SecCopyErrorMessageString(error_code, nil)
-      raise KeychainException, "Error updating password: #{message}"
+      raise KeychainException.new( 'Updating password', error_code )
     end
   end
 
@@ -131,8 +128,7 @@ class Item
     when ErrSecSuccess then
       metadata!
     else
-      message = SecCopyErrorMessageString(error_code, nil)
-      raise KeychainException, "Error updating keychain item: #{message}"
+      raise KeychainException.new( 'Updating keychain item', error_code )
     end
   end
 
@@ -151,8 +147,7 @@ class Item
     when ErrSecSuccess then
       result[0]
     else
-      message = SecCopyErrorMessageString(error_code, nil)
-      raise KeychainException, "Error getting metadata: #{message}"
+      raise KeychainException.new( 'Getting metadata', error_code )
     end
   end
 
