@@ -39,9 +39,9 @@ class Item
   # to the item you wish to work with, but you can add or remove attributes
   # via accessors as well.
   # @param [Hash] attributes
-  def initialize attributes = nil
+  def initialize attributes = {}
     @attributes = { KSecClass => KSecClassInternetPassword }
-    @attributes.merge! attributes if attributes
+    @attributes.merge! attributes
   end
 
   # @note This method asks only for the metadata and doesn't need authorization
