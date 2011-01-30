@@ -39,9 +39,8 @@ class Item
   end
 
   # @note This method asks only for the metadata and doesn't need authorization
-  # Returns true if there are any items matching the given attributes.
+  # Returns true if there is at least one item matching the given attributes.
   # @raise [KeychainException] for unexpected errors
-  # @return [true,false]
   def exists?
     result = Pointer.new :id
     search = {
