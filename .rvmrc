@@ -1,2 +1,2 @@
-rvm use macruby-nightly@keychain --create
+rvm use macruby-nightly
 
