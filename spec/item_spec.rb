@@ -34,30 +34,6 @@ describe 'Keychain' do
     end
 
 
-    describe '#exists?' do
-      it 'returns false if the item does not exist' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolIRCS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.exists?.should == false
-      end
-
-      it 'returns true if the item exists' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.exists?.should == true
-      end
-
-      it 'raises an exception for unexpected error codes' do
-        @item.attributes[KSecClass] = 'made up class'
-        expect { @item.exists? }.to raise_exception(Keychain::KeychainException)
-      end
-    end
-
-
     describe '#password' do
       it 'should return a string with the password' do
         @item.attributes.merge!(

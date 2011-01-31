@@ -38,33 +38,6 @@ class Item
     @attributes = { KSecClass => KSecClassInternetPassword }.merge! attributes
   end
 
-  # @note This method asks only for the metadata and doesn't need authorization
-  # Returns true if there is at least one item matching the given attributes.
-  # @raise [KeychainException] for unexpected errors
-  def exists?
-    result = Pointer.new :id
-    search = {
-      KSecMatchLimit       => KSecMatchLimitOne,
-      KSecReturnAttributes => true
-    }
-    @attributes.each_pair { |key, value|
-      if Symbol === key
-        search[attr_const_get(key)] = value
-      else
-        search[key] = value
-      end
-    }
-
-    case (error_code = SecItemCopyMatching(search, result))
-    when ErrSecSuccess then
-      true
-    when ErrSecItemNotFound then
-      false
-    else
-      raise KeychainException.new( 'Checking keychain item existence', error_code )
-    end
-  end
-
   # @note We ask for an NSData object here in order to get the password.
   # Returns the password for the first match found, raises an error if
   # no keychain item is found.
