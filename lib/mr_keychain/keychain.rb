@@ -49,6 +49,38 @@ module Keychain
       end
     end
 
+
+    # Basically the same as {Keychain.item_exists?} except that you can
+    # override KSecMatchLimit if you want more than one result.
+    # If you match against multiple items then you will get an array back.
+    # Unless there are no results in which case you will always get nil back.
+    def lookup search_dict
+      dict   = {
+        KSecClass            => KSecClassInternetPassword,
+        KSecMatchLimit       => KSecMatchLimitOne
+      }.merge! search_dict.merge(
+        KSecReturnAttributes => true
+      )
+      for key in [KSecReturnData, KSecReturnRef, KSecReturnPersistentRef]
+        dict.delete key
+      end
+      result = Pointer.new :id
+
+      case error_code = SecItemCopyMatching( dict, result )
+      when ErrSecSuccess
+        result = result[0]
+        if result.class == Array
+          result.map { |dictionary| Item.new dictionary }
+        else
+          Item.new result
+        end
+      when ErrSecItemNotFound
+        return nil
+      else
+        raise KeychainException.new( 'Looking up item', error_code )
+      end
+    end
+
   end
 
 end
