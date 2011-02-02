@@ -35,7 +35,7 @@ class Item
   # via accessors as well.
   # @param [Hash] attributes
   def initialize attributes = {}
-    @attributes = { KSecClass => KSecClassInternetPassword }.merge! attributes
+    @attributes = attributes
   end
 
   # @note We ask for an NSData object here in order to get the password.
