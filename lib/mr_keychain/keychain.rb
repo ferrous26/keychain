@@ -36,9 +36,9 @@ module Keychain
         KSecMatchLimit       => KSecMatchLimitOne,
         KSecReturnAttributes => true
       )
-      [KSecReturnData, KSecReturnRef, KSecReturnPersistentRef].each {
-        |key| dict.delete key
-      }
+      for key in [KSecReturnData, KSecReturnRef, KSecReturnPersistentRef]
+        dict.delete key
+      end
       result = Pointer.new :id # we MUST pass a pointer; nil is not allowed
 
       case error_code = SecItemCopyMatching( dict, result )
