@@ -3,6 +3,16 @@ Keychain
 
 A simple class for working with the Mac OS X keychain.
 
+Design Concept
+==============
+
+The API is designed for you to think of working with the keychain based
+on using key/value pairs to specify what you want.
+
+This is a further distilation of how things work with the new Snow Leopard
+APIs for accessing the keychain. Ideally things now work in a much more
+Ruby-like way than they would had you used the originally set of C functions.
+
 Reference
 =========
 
