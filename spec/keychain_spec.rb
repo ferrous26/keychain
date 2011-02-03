@@ -50,4 +50,15 @@ describe Keychain do
     it 'should allow the item class to be overriden'
   end
 
+
+  describe '.lookup_item' do
+    it 'should return nil if nothing is found'
+    it 'should return a single item for singular search'
+    it 'should return an array of items for plural search'
+    it 'should allow you to override the match limit'
+    it 'should ignore any extra return type key/value pairs'
+    it 'should not mutate the given search dictionary'
+    it 'should ignore any extra return type key/value pairs'
+  end
+
 end
