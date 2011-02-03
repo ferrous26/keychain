@@ -50,10 +50,16 @@ module Keychain
     end
 
 
-    # Basically the same as {Keychain.item_exists?} except that you can
-    # override KSecMatchLimit if you want more than one result.
-    # If you match against multiple items then you will get an array back.
-    # Unless there are no results in which case you will always get nil back.
+    # This method is used to actually retrieve items from the keychain. The
+    # interface here is almost the same as {Keychain.item_exists?} except
+    # that you can override KSecMatchLimit if you want more than one result.
+    #
+    # This method will return nil if nothing is found; it will return a single
+    # Keychain::Item if KSecMatchLimit is KSecMatchLimitOne; and will return
+    # an array of Keychain::Item objects if KSecMatchLimit is KSecMatchLimitAll.
+    # @param [Hash] search_dict
+    # @return [Keychain::Item,Array<Keychain::Item>,nil]
+    # @raise [KeychainException] only for unexpected result codes
     def lookup search_dict
       dict   = {
         KSecClass            => KSecClassInternetPassword,
