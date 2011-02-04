@@ -35,6 +35,8 @@ describe 'Keychain' do
         )
         expect { @item.password }.to raise_exception(Keychain::KeychainException)
       end
+
+      it 'should return an empty string when the password is blank'
     end
 
 

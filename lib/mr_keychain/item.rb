@@ -42,21 +42,24 @@ class Item
   end
 
   # @note We ask for an NSData object here in order to get the password.
-  # Returns the password for the first match found, raises an error if
-  # no keychain item is found.
+  # @note Blank passwords should come back as an empty string, but that
+  #  hasn't been tested.
+  # Returns the password for the item.
   #
-  # Blank passwords should come back as an empty string, but that hasn't
-  # been tested.
-  # @raise [KeychainException]
+  # This method will raise an error if no keychain item is found, which
+  # should only happen if the item was deleted since this object was
+  # instantiated or you changed some of the key/value pairs used to
+  # lookup the object.
+  # @raise [Keychain::KeychainException]
   # @return [String] UTF8 encoded password string
   def password
-    result = Pointer.new :id
     search = @attributes.merge(
       KSecMatchLimit => KSecMatchLimitOne,
       KSecReturnData => true
     )
+    result = Pointer.new :id
 
-    case (error_code = SecItemCopyMatching(search, result))
+    case error_code = SecItemCopyMatching( search, result )
     when ErrSecSuccess then
       result[0].to_str
     else
