@@ -107,6 +107,9 @@ describe Keychain do
       Keychain.lookup_item search_dict
       search_dict.should == original_dict
     end
+
+    it 'should allow for additional search attribute key/vaule pairs'
+    it 'should allow the item class to be overriden'
   end
 
 end
