@@ -5,9 +5,7 @@ describe 'Keychain' do
 
   describe 'Item' do
 
-    before do
-      @item = Keychain::Item.new
-    end
+    before do @item = Keychain::Item.new KSecClass => KSecClassInternetPassword end
 
 
     describe 'attributes attribute' do
@@ -17,19 +15,6 @@ describe 'Keychain' do
 
       it 'is writable' do
         @item.respond_to?(:attributes=).should == true
-      end
-
-      it 'should be initialized with the class being set' do
-        @item.attributes[KSecClass].should_not == nil
-      end
-
-      it 'should be initialized to be of the interenet class' do
-        @item.attributes[KSecClass].should == KSecClassInternetPassword
-      end
-
-      it 'should allow the class to be overriden' do
-        @item = Keychain::Item.new( KSecClass => 'different' )
-        @item.attributes[KSecClass].should == 'different'
       end
     end
 

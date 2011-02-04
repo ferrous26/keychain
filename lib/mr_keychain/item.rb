@@ -33,6 +33,9 @@ class Item
   # You should initialize objects of this class with the attributes relevant
   # to the item you wish to work with, but you can add or remove attributes
   # via accessors as well.
+  # Each Keychain::Item should contain a type class (internet password,
+  # generic password, etc.), and the attributes of the item. It is highly
+  # recommended to not cache the password in an instance.
   # @param [Hash] attributes
   def initialize attributes = {}
     @attributes = attributes
