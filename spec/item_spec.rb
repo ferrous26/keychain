@@ -149,7 +149,7 @@ describe Keychain::Item do
                               KSecAttrProtocol => KSecAttrProtocolHTTPS,
                               KSecAttrServer   => 'github.com'
                               )
-      @item.update!({ KSecAttrComment => 'test' })
+      @item.update!( KSecAttrComment => 'test' )
       @item.metadata[KSecAttrComment].should == 'test'
     end
 
@@ -168,7 +168,7 @@ describe Keychain::Item do
                               KSecAttrProtocol => KSecAttrProtocolHTTPS,
                               KSecAttrServer   => 'github.com'
                               )
-      @item.update!({ KSecAttrComment => 'toast' })
+      @item.update!( KSecAttrComment => 'toast' )
       @item.attributes[KSecAttrComment].should == 'toast'
     end
 
