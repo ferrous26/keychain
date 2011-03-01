@@ -100,7 +100,7 @@ class Item
     if exists?
       error_code = SecItemUpdate( @attributes, password_data )
     else
-      error_code = SecItemAdd( @attributes.merge password_data, nil )
+      error_code = SecItemAdd( @attributes.merge(password_data), nil )
     end
 
     case error_code
