@@ -5,9 +5,10 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new '>= 0'
   s.rubygems_version          = '1.4.2'
 
-  s.summary     = 'Example code of how to use the Mac OS X keychain in MacRuby'
+  s.summary     = 'A wrapper around the Mac OS X keychain for MacRuby'
   s.description = <<-EOS
-Takes advantage of MacRuby and uses APIs new in Snow Leopard to create, read, and update keychain entries
+Takes advantage of APIs new in Snow Leopard to create, read, and update keychain entries
+using MacRuby.
   EOS
   s.authors       = ['Mark Rada']
   s.email         = 'marada@uwaterloo.ca'
@@ -36,6 +37,7 @@ Takes advantage of MacRuby and uses APIs new in Snow Leopard to create, read, an
                         'README.markdown'
                        ]
 
+  s.requirements = ['BridgeSupport Preview']
   s.add_development_dependency 'rake',      ['>= 0.8.7']
   s.add_development_dependency 'rspec',     ['~> 2.5.0']
   s.add_development_dependency 'yard',      ['~> 0.6.4']
