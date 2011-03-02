@@ -33,3 +33,15 @@ namespace :macruby do
   end
 
 end
+
+namespace :gem do
+  desc 'Build the gem'
+  task :build => [:'macruby:compile', :'macruby:compile_deps'] do
+    puts `gem build -v AXElements.gemspec`
+  end
+
+  desc 'Build the gem and install it'
+  task :install => :build do
+    puts `gem install -v #{Dir.glob('./mr_keychain*.gem').sort.reverse.first}`
+  end
+end
