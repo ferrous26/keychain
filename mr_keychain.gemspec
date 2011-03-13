@@ -1,6 +1,9 @@
+$LOAD_PATH.unshift File.join( File.dirname(__FILE__), 'lib' )
+require 'mr_keychain/version'
+
 Gem::Specification.new do |s|
   s.name    = 'mr_keychain'
-  s.version = '0.1.1'
+  s.version = Keychain::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new '>= 0'
   s.rubygems_version          = '1.4.2'

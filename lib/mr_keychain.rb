@@ -5,6 +5,7 @@ framework 'Foundation'
 module Keychain
 end
 
+require 'mr_keychain/version'
 require 'mr_keychain/keychain'
 require 'mr_keychain/item'
 require 'mr_keychain/keychain_exception'
