@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.name    = 'mr_keychain'
   s.version = Keychain::VERSION
 
-  s.required_rubygems_version = Gem::Requirement.new '>= 0'
-  s.rubygems_version          = '1.4.2'
+  s.required_rubygems_version = Gem::Requirement.new '>= 1.4.2'
+  s.rubygems_version          = Gem::VERSION
 
   s.summary     = 'A wrapper around the Mac OS X keychain for MacRuby'
   s.description = <<-EOS
