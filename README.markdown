@@ -6,12 +6,13 @@ A simple class for working with the Mac OS X keychain.
 Design Concept
 ==============
 
-The API is designed for you to think of working with the keychain based
-on using key/value pairs to specify what you want.
+The API is designed for you to think of working with the keychain
+based on key/value pair matching.
 
-This is a further distilation of how things work with the new Snow Leopard
-APIs for accessing the keychain. Ideally things now work in a much more
-Ruby-like way than they would had you used the originally set of C functions.
+This is a further distilation of how things work with the new Snow
+Leopard APIs for accessing the keychain. Ideally things now work in a
+much more Ruby-like way than they would had you used the originally
+set of C functions.
 
 Reference
 =========
@@ -21,7 +22,7 @@ To learn more about using the Keychain on OS X, see Apple's [Keychain Services P
 Tips
 ====
 
-* You need to be careful about what key-value pairs you have stored in an item's attributes, they can sometimes mess up searches or cause unexpected failures when saving/updating a keychain item.
+* You need to be careful about what key/value pairs you have stored in an item's attributes, they can sometimes mess up searches or cause unexpected failures when saving/updating a keychain item.
 
 Example Usage
 =============
