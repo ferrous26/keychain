@@ -1,12 +1,14 @@
 module Keychain
 
+##
 # @note Methods only need a user's explicit authorization if they want the
-#  password data, metadata does not need permission. In these cases, the OS
+#  password data and they do not already have permission. In these cases, the OS
 #  should present an alert asking to allow, deny, or always allow the script
 #  to access. You need to be careful when using 'always allow' if you are
 #  running this code from interactive ruby or the regular interpreter because
 #  you could accidentally allow any future script to not require permission
 #  to access any password in the keychain.
+#
 # Represents an entry in the login keychain.
 #
 # The big assumption that this class makes is that you only ever want
