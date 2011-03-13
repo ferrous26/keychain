@@ -40,7 +40,7 @@ using MacRuby.
                         'README.markdown'
                        ]
 
-  s.requirements = ['BridgeSupport Preview']
+  s.requirements = ['BridgeSupport Preview 3']
   s.add_development_dependency 'rspec',     ['~> 2.5']
   s.add_development_dependency 'yard',      ['~> 0.6.4']
   s.add_development_dependency 'bluecloth', ['~> 2.0.11']
