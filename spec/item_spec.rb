@@ -1,186 +1,101 @@
 require 'spec_helper'
 
-# @todo get the spec tests to use mock data
 describe Keychain::Item do
 
-  before do @item = Keychain::Item.new KSecClass => KSecClassInternetPassword end
+  before do @item = Keychain::Item.new end
 
-
-  describe 'attributes attribute' do
+  describe 'attributes' do
     it 'is readable' do
-      @item.respond_to?(:attributes).should == true
+      Keychain::Item.new.should respond_to :attributes
     end
-
     it 'is writable' do
-      @item.respond_to?(:attributes=).should == true
+      Keychain::Item.new.should respond_to :attributes=
+    end
+    it 'is initialized to be a hash' do
+      Keychain::Item.new.attributes.class.should == Hash
     end
   end
-
-
-  describe '#password' do
-    it 'should return a string with the password' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      @item.password.class.should == String
-    end
-
-    it 'should raise an exception if no password is found' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolIRCS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      expect { @item.password }.to raise_exception Keychain::KeychainException
-    end
-
-    it 'should return an empty string when the password is blank'
-  end
-
-
-  describe '#metadata' do
-    it 'should return a hash' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      @item.metadata.class.should == Hash
-    end
-
-    it 'should raise an exception if nothing is found' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolIRCS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      expect { @item.metadata }.to raise_exception(Keychain::KeychainException)
-    end
-
-    # this assumes the keychain item has more metadata
-    it 'should not overwrite @attributes' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      metadata = @item.metadata
-      @item.attributes.should_not == metadata
-    end
-  end
-
-
-  describe '#metadata!' do
-    it 'should return a hash' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      @item.metadata.class.should == Hash
-    end
-
-    it 'should raise an exception if nothing is found' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolIRCS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      expect { @item.metadata }.to raise_exception(Keychain::KeychainException)
-    end
-
-    # this assumes the keychain item has more metadata
-    it 'should overwrite @attributes' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      metadata = @item.metadata!
-      @item.attributes.should == metadata
-    end
-  end
-
 
   describe '#[]' do
     it 'should be equivalent to #attributes' do
       @item.attributes[:test] = 'test'
       @item[:test].should == 'test'
-      @item[KSecClass].should == @item.attributes[KSecClass]
     end
+    it 'should add a special case for argument KSecAttrPassword'
   end
-
 
   describe '#[]=' do
     it 'should be equivalent to #attributes=' do
-      @item[:test] = 'test'
-      @item.attributes[:test].should == 'test'
+      @item[:test1] = 'test'
+      @item.attributes[:test1].should == 'test'
     end
+    it 'should add a special case for argument KSecAttrPassword'
   end
 
+  describe '#password' do
+    it 'should update the password stored in the keychain'
+    it 'should return the stored password'
+    it 'should return an empty string for blank passwords'
+    it 'should not cache the password'
+    it 'should raise an exception for an unexpected result code'
+  end
 
-  # describe '#password=' do
-  #   before do
-  #     @item.attributes.merge!(
-  #                             KSecAttrProtocol => KSecAttrProtocolHTTPS,
-  #                             KSecAttrServer   => 'github.com'
-  #                             )
-  #   end
+  describe '#password=' do
+    it 'should return the stored password'
+    it 'sholud create entries if they do not exist'
+    it 'should store a nil password as an empty string'
+    it 'should not cache the password'
+    it 'should raise an exception for an unexepected result code'
+  end
 
-  #   it 'should return the updated password' do
-  #     (@item.password = 'new password').should == 'new password'
-  #   end
+  describe '#account' do
+    'should be equivalent to #[KSecAttrAccount]'
+  end
 
-  #   it 'should update the password in the keychain' do
-  #     (@item.password = 'new password').should == @item.password
-  #   end
+  describe '#account=' do
+    'should be equivalent to #[KSecAttrAccount]='
+  end
 
-  #   it 'should create entries if they do not exsit' do
-  #     @item.attributes.merge!(
-  #                             KSecAttrAccount  => 'test'
-  #                             )
-  #     @item.password = 'another test'
-  #     @item.exists?.should == true
-  #   end
+  describe '#server' do
+    'should be equivalent to #[KSecAttrServer]'
+  end
 
-  #   after do
-  #     NSLog('I created an entry in your keychain that you should clean up')
-  #   end
-  # end
+  describe '#server=' do
+    'should be equivalent to #[KSecAttrServer]='
+  end
 
+  describe '#item_class' do
+    'should be equivalent to #[KSecClass]'
+  end
 
-  describe '#update!' do
-    it 'should update fields given in the persistent keychain' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      @item.update!( KSecAttrComment => 'test' )
-      @item.metadata[KSecAttrComment].should == 'test'
-    end
+  describe '#item_class=' do
+    'should be equivalent to #[KSecClass]='
+  end
 
-    it 'should raise an exception for non-existant items' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolIRCS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      expect {
-        @item.update!( KSecAttrComment => 'different test' )
-      }.to raise_exception(Keychain::KeychainException)
-    end
+  describe '#save!' do
+    it 'should update a keychain item with @attributes if the item exists'
+    # @todo will this work without setting a password at the same time?
+    it 'should create a new keychain item if it does not exist'
+    it 'should raise an exception for an unexpected result code'
+    it 'should update @attributes'
+    it 'should return self'
+  end
 
-    it 'should update @attributes' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      @item.update!( KSecAttrComment => 'toast' )
-      @item.attributes[KSecAttrComment].should == 'toast'
-    end
+  #  don't overwrite attributes with extra search parameters
+  #  password should not be cached
+  #  raise appropriate errors in error cases
+  describe '#reload!' do
+    it 'should return self'
+    it 'should update local @attributes with the keychain item'
+    # @todo or should it just make @attributes an empty hash
+    it 'should raise an exception if nothing is found'
+    it 'should raise an exception for an unexpected error code'
+  end
 
-    it 'should return the metadata of the keychain item' do
-      @item.attributes.merge!(
-                              KSecAttrProtocol => KSecAttrProtocolHTTPS,
-                              KSecAttrServer   => 'github.com'
-                              )
-      @item.update!(
-                    KSecAttrComment => 'bread'
-                    )[KSecAttrComment].should == 'bread'
-    end
+  describe '#exists?' do
+    it 'should return true if the item exists'
+    it 'should return false if the item does not exist'
+    it 'should return false if there is an unexpected result code'
   end
 
 end
