@@ -6,7 +6,7 @@ describe Keychain::Exception, '#initialize' do
     expect { Keychain::KeychainException.new '', ErrSecSuccess }.to_not raise_error ArgumentError
     expect { Keychain::KeychainException.new '', ErrSecSuccess }.to_not raise_error TypeError
   end
-  it 'should add the prefix to beginning of the error message'
+  it 'should add the prefix to beginning of the error message' do
     exception = Keychain::KeychainException.new 'my prefix', 0
     exception.message.should match /^my prefix/
   end
