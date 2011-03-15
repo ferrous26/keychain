@@ -33,7 +33,10 @@ describe Keychain::Item do
   end
 
   describe '#password' do
-    it 'should update the password stored in the keychain'
+    before do
+      @item[KSecAttrProtocol] = KSecAttrProtocolHTTPS
+      @item[KSecAttrServer]   = 'github.com'
+    end
     it 'should return the stored password'
     it 'should return an empty string for blank passwords'
     it 'should not cache the password'
@@ -41,7 +44,12 @@ describe Keychain::Item do
   end
 
   describe '#password=' do
+    before do
+      @item[KSecAttrProtocol] = KSecAttrProtocolHTTPS
+      @item[KSecAttrServer]   = 'github.com'
+    end
     it 'should return the stored password'
+    it 'should update the password stored in the keychain'
     it 'sholud create entries if they do not exist'
     it 'should store a nil password as an empty string'
     it 'should not cache the password'
@@ -49,27 +57,52 @@ describe Keychain::Item do
   end
 
   describe '#account' do
-    'should be equivalent to #[KSecAttrAccount]'
+    'should be equivalent to #[KSecAttrAccount]' do
+      item = Keychain.item( KSecAttrServer => 'github.com' )
+      item.should respond_to :account
+      item.account.should == item[KSecAttrAccount]
+    end
   end
 
   describe '#account=' do
-    'should be equivalent to #[KSecAttrAccount]='
+    'should be equivalent to #[KSecAttrAccount]=' do
+      item = Keychain.item( KSecAttrServer => 'github.com' )
+      item.should respond_to :account=
+      item.account.should == item[KSecAttrAccount]
+    end
   end
 
   describe '#server' do
-    'should be equivalent to #[KSecAttrServer]'
+    'should be equivalent to #[KSecAttrServer]' do
+      item = Keychain.item( KSecAttrServer => 'github.com' )
+      item.should respond_to :server
+      item.server.should == item[KSecAttrServer]
+    end
   end
 
   describe '#server=' do
-    'should be equivalent to #[KSecAttrServer]='
+    'should be equivalent to #[KSecAttrServer]=' do
+      item = Keychain.item( KSecAttrServer => 'github.com' )
+      item.should respond_to :server=
+      item.server.should == item[KSecAttrServer]
+    end
   end
 
   describe '#item_class' do
-    'should be equivalent to #[KSecClass]'
+    'should be equivalent to #[KSecClass]' do
+      item = Keychain.item( KSecAttrServer => 'github.com' )
+      item.should respond_to :server
+      item.server.should == item[KSecAttrServer]
+
+    end
   end
 
   describe '#item_class=' do
-    'should be equivalent to #[KSecClass]='
+    'should be equivalent to #[KSecClass]=' do
+      item = Keychain.item( KSecAttrServer => 'github.com' )
+      item.should respond_to :server
+      item.server.should == item[KSecAttrServer]
+    end
   end
 
   describe '#save!' do
@@ -78,14 +111,15 @@ describe Keychain::Item do
     it 'should create a new keychain item if it does not exist'
     it 'should raise an exception for an unexpected result code'
     it 'should update @attributes'
-    it 'should return self'
+    it 'should return self' do
+      @item.save!.should be @item
+    end
   end
 
-  #  don't overwrite attributes with extra search parameters
-  #  password should not be cached
-  #  raise appropriate errors in error cases
   describe '#reload!' do
-    it 'should return self'
+    it 'should return self' do
+      @item.reload!.should be @item
+    end
     it 'should update local @attributes with the keychain item'
     # @todo or should it just make @attributes an empty hash
     it 'should raise an exception if nothing is found'
@@ -93,9 +127,18 @@ describe Keychain::Item do
   end
 
   describe '#exists?' do
-    it 'should return true if the item exists'
-    it 'should return false if the item does not exist'
-    it 'should return false if there is an unexpected result code'
+    it 'should return true if the item exists' do
+      @item[KSecAttrServer] = 'github.com'
+      @item.exists?.should be_true
+    end
+    it 'should return false if the item does not exist' do
+      @item[KSecAttrServer] = 'fake.example.org'
+      @item.exists?.should be_false
+    end
+    it 'should return false if there is an unexpected result code' do
+      @item[KSecClass] = 'ERROR'
+      @item.exists?.should be_false
+    end
   end
 
 end
