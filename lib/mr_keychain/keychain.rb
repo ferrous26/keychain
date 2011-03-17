@@ -60,7 +60,7 @@ module Keychain
     # @param [Hash] search_dict
     # @return [Keychain::Item,Array<Keychain::Item>,nil]
     # @raise [KeychainException] only for unexpected result codes
-    def lookup_item search_dict
+    def item search_dict
       dict   = {
         KSecClass            => KSecClassInternetPassword,
         KSecMatchLimit       => KSecMatchLimitOne
