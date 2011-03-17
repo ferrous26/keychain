@@ -19,13 +19,21 @@ describe Keychain do
     end
     it 'should not mutate the given search dictionary' do
       search_dict = (original_dict = { KSecAttrServer => 'github.com' }).dup
-      Keychain.item_exists? search_dict
+      Keychain.item_exists?( search_dict )
       search_dict.should == original_dict
     end
-    it 'should allow the class to be overriden'
-    it 'should allow filtering based on attribute key/value pairs'
-    it 'should allow filtering based on search key/value pairs'
-    it 'should ignore any extra return type key/value pairs'
+    it 'should allow filtering based on attribute key/value pairs' do
+      Keychain.item_exists?( KSecAttrProtocol => KSecAttrProtocolHTTPS
+                             ).should be_true
+    end
+    it 'should allow filtering based on search key/value pairs' do
+      Keychain.item_exists?( KSecMatchCaseInsensitive => true,
+                             KSecAttrServer => 'Github.COM'
+                             ).should be_true
+    end
+    it 'should ignore any extra return type key/value pairs' do
+      Keychain.item_exists?( KSecReturnData => true ).should be_true
+    end
   end
 
   describe '.item' do
@@ -34,9 +42,7 @@ describe Keychain do
     end
     it 'should return a single item if a single item is found' do
       ret = Keychain.item KSecAttrServer => 'github.com'
-      ret.should_not be_nil
-      ret.class.should == Keychain::Item
-      ret[KSecAttrServer].should == 'github.com'
+      ret.should be_instance_of Keychain::Item
     end
     it 'should raise an error in case of an unexpected result code' do
       expect {
@@ -48,29 +54,36 @@ describe Keychain do
       Keychain.item search_dict
       search_dict.should == original_dict
     end
-    it 'should allow the class to be overridden'
-    it 'should allow filtering based on attribute key/value pairs'
-    it 'should allow filtering based on search key/value pairs'
-    it 'should ignore any additional return type keys'
+    it 'should allow filtering based on attribute key/value pairs' do
+      ret = Keychain.item( KSecAttrServer => 'github.com' )
+      ret[KSecAttrServer].should == 'github.com'
+    end
+    it 'should allow filtering based on search key/value pairs' do
+      ret = Keychain.item( KSecMatchCaseInsensitive => true,
+                           KSecAttrServer => 'Github.COM' )
+      ret[KSecAttrServer].should == 'github.com'
+    end
+    it 'should ignore any additional return type keys' do
+      ret = Keychain.item( KSecReturnData => true )
+      ret.should be_instance_of Keychain::Item
+    end
   end
 
   describe '.items' do
+    it 'should return an array' do
+      ret = Keychain.items( KSecAttrServer => 'github.com' )
+      ret.should be_instance_of Array
+    end
     it 'should return an empty array if nothing is found' do
       Keychain.items( KSecAttrServer => 'fake.example.org' ).should be_nil
     end
-    it 'should return an array of one if a single item is found' do
-      ret = Keychain.items KSecAttrServer => 'github.com'
-      ret.should_not be_nil
-      ret.class.should == Array
-      ret.first[KSecAttrServer].should == 'github.com'
-      ret.size.should satisfy { |size| size > 1 }
+    it 'should return an array with Keychain::Item objects in it' do
+      ret = Keychain.items( KSecAttrServer => 'github.com' )
+      ret.first.should be_instance_of Keychain::Item
     end
     it 'should return many items if many items are found' do
       ret = Keychain.items( KSecAttrProtocol => KSecAttrProtocolHTTPS )
-      ret.should_not be_nil
-      ret.class.should == Array
-      ret.first.class.should == Keychain::Item
-      ret.first[KSecAttrProtocol].should == KSecAttrProtocolHTTPS
+      ret.size.should satisfy { |size| size > 1 }
     end
     it 'should raise an error in case of an unexpected result code' do
       expect {
@@ -79,13 +92,23 @@ describe Keychain do
     end
     it 'should not mutate the given search dictionary' do
       search_dict = (original_dict = { KSecAttrServer => 'github.com' }).dup
-      Keychain.items search_dict
+      Keychain.items( search_dict )
       search_dict.should == original_dict
     end
-    it 'should allow the class to be overridden'
-    it 'should allow filtering based on attribute key/value pairs'
-    it 'should allow filtering based on search key/value pairs'
-    it 'should ignore any additional return type keys'
+    it 'should allow filtering based on attribute key/value pairs' do
+      ret = Keychain.items( KSecAttrServer => 'github.com' )
+      ret.first[KSecAttrServer].should == 'github.com'
+    end
+    it 'should allow filtering based on search key/value pairs' do
+      ret = Keychain.items( KSecMatchCaseInsensitive => true,
+                            KSecAttrServer => 'Github.COM' )
+      ret.first[KSecAttrServer].should == 'github.com'
+    end
+    it 'should ignore any additional return type keys' do
+      ret = Keychain.items( KSecReturnData => true )
+      ret.first.should be_instance_of Keychain::Item
+    end
+
   end
 
 end
