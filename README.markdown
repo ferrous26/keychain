@@ -6,23 +6,37 @@ A simple class for working with the Mac OS X keychain.
 Design Concept
 ==============
 
-The API is designed for you to think of working with the keychain
-based on key/value pair matching.
+The API is designed for you to work with the keychain based on
+key/value pair matching.
 
 This is a further distilation of how things work with the new Snow
 Leopard APIs for accessing the keychain. Ideally things now work in a
-much more Ruby-like way than they would had you used the originally
-set of C functions.
+much more Rubyish way than they would had you used the originally set
+of C functions.
+
+Basics
+======
+
+There are 4 categories of key/value pairs that you combine to make
+queries.
+
+1. The class of items you want to search for or work with
+(e.g. internet passwords). This is a mandatory field; but mr_keychain
+currently will automatically add a class of
+KSecClassInternetPassword for you.
+2. Item attributes (e.g. and account name); there can be zero or more
+of these.
+3. Search filters (e.g. case sensitivity); there can be zero or more
+of these.
+4. A return type (e.g. an attribute hash); there must be at least one
+of these, but more can be specified. However, most methods in
+mr_keychain will set the return type for you and prevent you from
+setting it any other way.
 
 Reference
 =========
 
 To learn more about using the Keychain on OS X, see Apple's [Keychain Services Programming Guide](http://developer.apple.com/library/ios/#documentation/Security/Conceptual/keychainServConcepts/01introduction/introduction.html) and the [Keychain Services Reference](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html).
-
-Tips
-====
-
-* You need to be careful about what key/value pairs you have stored in an item's attributes, they can sometimes mess up searches or cause unexpected failures when saving/updating a keychain item.
 
 Example Usage
 =============
