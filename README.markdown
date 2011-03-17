@@ -65,6 +65,13 @@ TODO
 - Make the simple cases simpler
 - Allow more succinct names for constants and guess the actual values
 
+Caveats
+=======
+
+The APIs that this library depends on only have access to internet
+passwords right now. The interface should remain the same when/if it
+is expanded to include the other types of items that the keychain holds.
+
 Contributing to keychain
 ========================
 
