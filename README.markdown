@@ -20,18 +20,19 @@ Basics
 There are 4 categories of key/value pairs that you combine to make
 queries.
 
-1. The class of items you want to search for or work with
-(e.g. internet passwords). This is a mandatory field; but mr_keychain
-currently will automatically add a class of
-KSecClassInternetPassword for you.
-2. Item attributes (e.g. and account name); there can be zero or more
-of these.
-3. Search filters (e.g. case sensitivity); there can be zero or more
-of these.
-4. A return type (e.g. an attribute hash); there must be at least one
-of these, but more can be specified. However, most methods in
-mr_keychain will set the return type for you and prevent you from
-setting it any other way.
+1. [Item class](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/constant_group/Item_Class_Value_Constants);
+this is a mandatory field; but `mr_keychain` currently will
+automatically add a class of KSecClassInternetPassword for you (since
+that is the only supported class right now).
+2. [Item Attributes](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/uid/TP30000898-CH4g-SW5);
+there can be zero or more of these.
+3. [Search filters](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/uid/TP30000898-CH4g-SW1);
+there can be zero or more of these.
+4. A
+[return type](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/uid/TP30000898-CH4g-SW6);
+there must be at least one of these, but more can be
+specified. However, most methods in `mr_keychain` will set the return
+type for you and prevent you from overriding.
 
 Reference
 =========
