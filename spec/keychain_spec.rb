@@ -7,9 +7,6 @@ describe Keychain do
       Keychain.item_exists?( KSecAttrProtocol => KSecAttrProtocolIRCS,
                              KSecAttrServer   => 'github.com' ).should be_false
     end
-    it 'returns false if there is an unexpected problem' do
-      Keychain.item_exists?( KSecClass => 'fake class name' ).should be_false
-    end
     it 'returns true if at least one item matches' do
       Keychain.item_exists?( KSecAttrProtocol => KSecAttrProtocolHTTPS,
                              KSecAttrServer   => 'github.com' ).should be_true
@@ -33,6 +30,11 @@ describe Keychain do
     end
     it 'should ignore any extra return type key/value pairs' do
       Keychain.item_exists?( KSecReturnData => true ).should be_true
+    end
+    it 'should raise an error for unexpected result codes' do
+      expect {
+        Keychain.item_exists?( KSecClass => 'explode-o-rama' )
+      }.to raise_error Keychain::KeychainException
     end
   end
 
