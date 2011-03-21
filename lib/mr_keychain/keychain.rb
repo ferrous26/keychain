@@ -40,39 +40,30 @@ module Keychain
       end
     end
 
-
-    # This method is used to actually retrieve items from the keychain. The
-    # interface here is almost the same as {Keychain.item_exists?} except
-    # that you can override KSecMatchLimit if you want more than one result.
+    ##
+    # @note This method asks only for the metadata and should never need
+    #       user authorization.
     #
-    # This method will return nil if nothing is found; it will return a single
-    # Keychain::Item if KSecMatchLimit is KSecMatchLimitOne; and will return
-    # an array of Keychain::Item objects if KSecMatchLimit is KSecMatchLimitAll.
-    # @param [Hash] search_dict
-    # @return [Keychain::Item,Array<Keychain::Item>,nil]
+    # Returns a {Keychain::Item} if an item is found, otherwise returns nil.
+    #
+    # The hash argument for this method is constructed exactly the same as
+    # with {Keychain.item_exists?}, with the same default values given.
+    #
     # @raise [KeychainException] only for unexpected result codes
+    # @param [Hash] search_dict
+    # @return [Keychain::Item,nil]
     def item search_dict
-      dict   = {
-        KSecClass            => KSecClassInternetPassword,
-        KSecMatchLimit       => KSecMatchLimitOne
-      }.merge! search_dict.merge(
-        KSecReturnAttributes => true
-      )
-      for key in [KSecReturnData, KSecReturnRef, KSecReturnPersistentRef]
-        dict.delete key
-      end
-      result = Pointer.new :id
+      dict = create_search_dict( { KSecClass => KSecClassInternetPassword },
+                                 { KSecMatchLimit => KSecMatchLimitOne },
+                                 search_dict,
+                                 KSecReturnAttributes )
 
-      case error_code = SecItemCopyMatching( dict, result )
-      when ErrSecSuccess
-        result = result[0]
-        if result.class == Array
-          result.map { |dictionary| Item.new dictionary }
-        else
-          Item.new result
-        end
-      when ErrSecItemNotFound
-        return nil
+      result = Pointer.new(:id)
+      error_code = SecItemCopyMatching( dict, result )
+
+      case error_code
+      when ErrSecSuccess      then Item.new(result[0])
+      when ErrSecItemNotFound then nil
       else
         raise KeychainException.new( 'Looking up item', error_code )
       end
