@@ -83,9 +83,10 @@ TODO
 Caveats
 =======
 
-The APIs that this library depends on only have access to internet
+The APIs that this library depends on can only access to internet
 passwords right now. The interface should remain the same when/if it
-is expanded to include the other types of items that the keychain holds.
+is expanded to include the other types of items that the keychain
+holds.
 
 Contributing to keychain
 ========================
@@ -103,4 +104,3 @@ Copyright
 
 Copyright (c) 2011 Mark Rada. See LICENSE.txt for
 further details.
-
