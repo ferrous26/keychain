@@ -77,7 +77,7 @@ describe Keychain do
       ret.should be_instance_of Array
     end
     it 'should return an empty array if nothing is found' do
-      Keychain.items( KSecAttrServer => 'fake.example.org' ).should be_nil
+      Keychain.items( KSecAttrServer => 'fake.example.org' ).should be_empty
     end
     it 'should return an array with Keychain::Item objects in it' do
       ret = Keychain.items( KSecAttrServer => 'github.com' )

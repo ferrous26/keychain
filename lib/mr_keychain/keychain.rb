@@ -69,6 +69,37 @@ module Keychain
       end
     end
 
+    ##
+    # @note This method asks only for the metadata and should never need
+    #       user authorization.
+    #
+    # Returns an array {Keychain::Item} objects, possibly empty.
+    #
+    # The hash argument for this method is constructed exactly the same as
+    # with {Keychain.item_exists?}, the only default key/value pair that
+    # is:
+    #
+    # * KSecMatchLimit => KSecMatchLimitAll
+    #
+    # @raise [KeychainException] only for unexpected result codes
+    # @param [Hash] search_dict
+    # @return [Array<Keychain::Item>]
+    def items search_dict
+      dict = create_search_dict( { KSecClass => KSecClassInternetPassword },
+                                 { KSecMatchLimit => KSecMatchLimitAll },
+                                 search_dict,
+                                 KSecReturnAttributes )
+
+      result = Pointer.new(:id)
+      error_code = SecItemCopyMatching( dict, result )
+
+      case error_code
+      when ErrSecSuccess      then result[0].map { |item| Item.new(item) }
+      when ErrSecItemNotFound then []
+      else
+        raise KeychainException.new( 'Looking up item', error_code )
+      end
+    end
 
     private
 
