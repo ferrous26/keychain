@@ -101,6 +101,7 @@ module Keychain
       end
     end
 
+
     private
 
     def create_search_dict override, enforce, user, return_type
