@@ -91,6 +91,13 @@ class Item
     attributes[KSecAttrAccount] = value
   end
 
-end
+  def server
+    attributes[KSecAttrServer]
+  end
 
+  def server= value
+    attributes[KSecAttrServer] = value
+  end
+
+end
 end
