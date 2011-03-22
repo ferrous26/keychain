@@ -1,36 +1,40 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe Keychain::Item do
+describe Keychain::Item do
 
-#   before do @item = Keychain::Item.new end
+  before do @item = Keychain::Item.new end
 
-#   describe 'attributes' do
-#     it 'is readable' do
-#       Keychain::Item.new.should respond_to :attributes
-#     end
-#     it 'is writable' do
-#       Keychain::Item.new.should respond_to :attributes=
-#     end
-#     it 'is initialized to be a hash' do
-#       Keychain::Item.new.attributes.class.should == Hash
-#     end
-#   end
+  describe 'attributes' do
+    it 'is readable' do
+      @item.should respond_to :attributes
+    end
+    it 'is writable' do
+      @item.should respond_to :attributes=
+    end
+    it 'is initialized with a default class' do
+      @item.attributes[KSecClass].should == KSecClassInternetPassword
+    end
+    it 'allows the default class to be overridden' do
+      ret = Keychain::Item.new(KSecClass => 'zomg made up')
+      ret.attributes[KSecClass].should == 'zomg made up'
+    end
+  end
 
-#   describe '#[]' do
-#     it 'should be equivalent to #attributes' do
-#       @item.attributes[:test] = 'test'
-#       @item[:test].should == 'test'
-#     end
-#     it 'should add a special case for argument KSecAttrPassword'
-#   end
+  describe '#[]' do
+    it 'should be equivalent to #attributes' do
+      @item.attributes[:test] = 'test'
+      @item[:test].should == 'test'
+    end
+    it 'should add a special case for argument KSecAttrPassword'
+  end
 
-#   describe '#[]=' do
-#     it 'should be equivalent to #attributes=' do
-#       @item[:test1] = 'test'
-#       @item.attributes[:test1].should == 'test'
-#     end
-#     it 'should add a special case for argument KSecAttrPassword'
-#   end
+  describe '#[]=' do
+    it 'should be equivalent to #attributes=' do
+      @item[:test1] = 'test'
+      @item.attributes[:test1].should == 'test'
+    end
+    it 'should add a special case for argument KSecAttrPassword'
+  end
 
 #   describe '#password' do
 #     before do
@@ -56,37 +60,33 @@
 #     it 'should raise an exception for an unexepected result code'
 #   end
 
-#   describe '#account' do
-#     'should be equivalent to #[KSecAttrAccount]' do
-#       item = Keychain.item( KSecAttrServer => 'github.com' )
-#       item.should respond_to :account
-#       item.account.should == item[KSecAttrAccount]
-#     end
-#   end
+  describe '#account' do
+    it 'should be equivalent to #[KSecAttrAccount]' do
+      @item[KSecAttrAccount] = 'test read name'
+      @item.account.should == @item[KSecAttrAccount]
+    end
+  end
 
-#   describe '#account=' do
-#     'should be equivalent to #[KSecAttrAccount]=' do
-#       item = Keychain.item( KSecAttrServer => 'github.com' )
-#       item.should respond_to :account=
-#       item.account.should == item[KSecAttrAccount]
-#     end
-#   end
+  describe '#account=' do
+    it 'should be equivalent to #[KSecAttrAccount]=' do
+      @item.account = 'test write name'
+      @item[KSecAttrAccount].should == 'test write name'
+    end
+  end
 
-#   describe '#server' do
-#     'should be equivalent to #[KSecAttrServer]' do
-#       item = Keychain.item( KSecAttrServer => 'github.com' )
-#       item.should respond_to :server
-#       item.server.should == item[KSecAttrServer]
-#     end
-#   end
+  describe '#server' do
+    it 'should be equivalent to #[KSecAttrServer]' do
+      @item[KSecAttrServer] = 'github.com'
+      @item.server.should == @item[KSecAttrServer]
+    end
+  end
 
-#   describe '#server=' do
-#     'should be equivalent to #[KSecAttrServer]=' do
-#       item = Keychain.item( KSecAttrServer => 'github.com' )
-#       item.should respond_to :server=
-#       item.server.should == item[KSecAttrServer]
-#     end
-#   end
+  describe '#server=' do
+    it 'should be equivalent to #[KSecAttrServer]=' do
+      @item.server = 'example.org'
+      @item[KSecAttrServer].should == 'example.org'
+    end
+  end
 
 #   describe '#item_class' do
 #     'should be equivalent to #[KSecClass]' do
@@ -141,4 +141,4 @@
 #     end
 #   end
 
-# end
+end
