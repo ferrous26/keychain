@@ -83,8 +83,12 @@ class Item
     end
   end
 
+  def account
+    attributes[KSecAttrAccount]
   end
 
+  def account= value
+    attributes[KSecAttrAccount] = value
   end
 
 end
