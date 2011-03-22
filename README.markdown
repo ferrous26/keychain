@@ -79,6 +79,7 @@ TODO
 
 - Make the simple cases simpler
 - Allow more succinct names for constants and guess the actual values
+- Allow deleting of keychain items
 
 Caveats
 =======
