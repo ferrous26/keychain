@@ -31,7 +31,7 @@ class Item
   #
   # @param [Hash] attributes
   def initialize attributes = {}
-    @attributes = attributes
+    @attributes = { KSecClass => KSecClassInternetPassword }.merge(attributes)
   end
 
   ##
