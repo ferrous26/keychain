@@ -1,26 +1,12 @@
-require 'rubygems'
 require 'rake'
 
 task :default => :spec
 task :test    => :spec
 
-require 'rspec/core'
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.skip_bundler = true
-  spec.pattern = FileList['spec/**/*_spec.rb']
-end
-
-require 'yard'
-YARD::Rake::YardocTask.new
-
-desc 'AOT compile source files'
-task :compile do
-  FileList["lib/**/*.rb"].each do |source|
-    name = File.basename source
-    puts "#{name} => #{name}o"
-    `macrubyc -C '#{source}' -o '#{source}o'`
-  end
+require 'rake/compiletask'
+Rake::CompileTask.new do |t|
+  t.files = FileList["lib/**/*.rb"]
+  t.verbose = true
 end
 
 desc 'Clean *.rbo files'
@@ -41,4 +27,12 @@ task :build do Gem::Builder.new(spec).build end
 
 desc 'Build the gem and install it'
 task :install => :build do Gem::Installer.new(spec.file_name).install end
+
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.skip_bundler = true
+  spec.pattern = FileList['spec/**/*_spec.rb']
 end
+
+require 'yard'
+YARD::Rake::YardocTask.new
