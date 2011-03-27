@@ -31,12 +31,14 @@ task :clean do
   end
 end
 
+require 'rubygems'
+require 'rubygems/builder'
+require 'rubygems/installer'
+spec = Gem::Specification.load('AXElements.gemspec')
+
 desc 'Build the gem'
-task :build do
-  puts `gem build -v mr_keychain.gemspec`
-end
+task :build do Gem::Builder.new(spec).build end
 
 desc 'Build the gem and install it'
-task :install => :build do
-  puts `gem install -v #{Dir.glob('./mr_keychain*.gem').sort.reverse.first}`
+task :install => :build do Gem::Installer.new(spec.file_name).install end
 end
