@@ -83,21 +83,11 @@ class Item
     end
   end
 
-  def account
-    attributes[KSecAttrAccount]
-  end
 
-  def account= value
-    attributes[KSecAttrAccount] = value
-  end
-
-  def server
-    attributes[KSecAttrServer]
-  end
-
-  def server= value
-    attributes[KSecAttrServer] = value
-  end
+  def account; attributes[KSecAttrAccount]; end
+  def account= value; attributes[KSecAttrAccount] = value; end
+  def server; attributes[KSecAttrServer]; end
+  def server= value; attributes[KSecAttrServer] = value; end
 
 end
 end
