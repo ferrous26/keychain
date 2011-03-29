@@ -123,19 +123,21 @@ describe Keychain::Item do
 #     it 'should raise an exception for an unexpected error code'
 #   end
 
-#   describe '#exists?' do
-#     it 'should return true if the item exists' do
-#       @item[KSecAttrServer] = 'github.com'
-#       @item.exists?.should be_true
-#     end
-#     it 'should return false if the item does not exist' do
-#       @item[KSecAttrServer] = 'fake.example.org'
-#       @item.exists?.should be_false
-#     end
-#     it 'should return false if there is an unexpected result code' do
-#       @item[KSecClass] = 'ERROR'
-#       @item.exists?.should be_false
-#     end
-#   end
+  describe '#exists?' do
+    it 'should return true if the item exists' do
+      @item[KSecAttrServer] = 'github.com'
+      @item.should exist
+    end
+    it 'should return false if the item does not exist' do
+      @item[KSecAttrServer] = 'fake.example.org'
+      @item.should_not exist
+    end
+    it 'should return false if there is an unexpected result code' do
+      expect {
+        @item[KSecClass] = 'ERROR'
+        @item.exists?
+      }.to raise_error Keychain::KeychainException
+    end
+  end
 
 end

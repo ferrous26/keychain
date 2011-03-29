@@ -83,6 +83,10 @@ class Item
     end
   end
 
+  def exists?
+    Keychain.item_exists? attributes
+  end
+
 
   def account; attributes[KSecAttrAccount]; end
   def account= value; attributes[KSecAttrAccount] = value; end
