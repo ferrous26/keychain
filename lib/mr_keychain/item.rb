@@ -88,6 +88,8 @@ class Item
   def account= value; attributes[KSecAttrAccount] = value; end
   def server; attributes[KSecAttrServer]; end
   def server= value; attributes[KSecAttrServer] = value; end
+  def item_class; attributes[KSecClass]; end
+  def item_class= value; attributes[KSecClass] = value; end
 
 end
 end

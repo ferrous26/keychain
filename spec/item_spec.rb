@@ -88,22 +88,19 @@ describe Keychain::Item do
     end
   end
 
-#   describe '#item_class' do
-#     'should be equivalent to #[KSecClass]' do
-#       item = Keychain.item( KSecAttrServer => 'github.com' )
-#       item.should respond_to :server
-#       item.server.should == item[KSecAttrServer]
+  describe '#item_class' do
+    it 'should be equivalent to #[KSecClass]' do
+      @item[KSecClass] = 'duh, winning'
+      @item.item_class.should == @item[KSecClass]
+    end
+  end
 
-#     end
-#   end
-
-#   describe '#item_class=' do
-#     'should be equivalent to #[KSecClass]=' do
-#       item = Keychain.item( KSecAttrServer => 'github.com' )
-#       item.should respond_to :server
-#       item.server.should == item[KSecAttrServer]
-#     end
-#   end
+  describe '#item_class=' do
+    it 'should be equivalent to #[KSecClass]=' do
+      @item.item_class = 'biwinning'
+      @item[KSecClass].should == 'biwinning'
+    end
+  end
 
 #   describe '#save!' do
 #     it 'should update a keychain item with @attributes if the item exists'
