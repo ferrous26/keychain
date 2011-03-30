@@ -36,16 +36,31 @@ describe Keychain::Item do
     it 'should add a special case for argument KSecAttrPassword'
   end
 
-#   describe '#password' do
-#     before do
-#       @item[KSecAttrProtocol] = KSecAttrProtocolHTTPS
-#       @item[KSecAttrServer]   = 'github.com'
-#     end
-#     it 'should return the stored password'
-#     it 'should return an empty string for blank passwords'
-#     it 'should not cache the password'
-#     it 'should raise an exception for an unexpected result code'
-#   end
+  describe '#password' do
+    before do
+      @item[KSecAttrServer] = 'example.test.org'
+    end
+    it 'should return the stored password' do
+      @item.password.should == 'password'
+    end
+    it 'should return an empty string for blank passwords' do
+      @item[KSecAttrServer] = 'example2.test.org'
+      @item.password.should be_empty
+    end
+    it 'should not cache the password' do
+      @item.password
+      @item.attributes.values.should_not include 'password'
+    end
+    it 'should raise an exception for an unexpected result code' do
+      @item[KSecClass] = 'madeup!'
+      expect { @item.password }.to raise_error Keychain::KeychainException
+    end
+    it 'should not alter the stored attributes' do
+      before_attributes = @item.attributes
+      @item.password
+      @item.attributes.should == before_attributes
+    end
+  end
 
 #   describe '#password=' do
 #     before do

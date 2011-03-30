@@ -51,7 +51,7 @@ class Item
       KSecMatchLimit => KSecMatchLimitOne,
       KSecReturnData => true
     )
-    result = Pointer.new :id
+    result = Pointer.new(:id)
 
     case error_code = SecItemCopyMatching( search, result )
     when ErrSecSuccess then
