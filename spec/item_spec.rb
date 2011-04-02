@@ -48,8 +48,8 @@ describe Keychain::Item do
       @item.password.should be_empty
     end
     it 'should not cache the password' do
-      @item.password
-      @item.attributes.values.should_not include 'password'
+      cached_password = @item.password
+      @item.attributes.values.should_not include cached_password
     end
     it 'should raise an exception for an unexpected result code' do
       @item[KSecClass] = 'madeup!'
