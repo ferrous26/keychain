@@ -62,18 +62,36 @@ describe Keychain::Item do
     end
   end
 
-#   describe '#password=' do
-#     before do
-#       @item[KSecAttrProtocol] = KSecAttrProtocolHTTPS
-#       @item[KSecAttrServer]   = 'github.com'
-#     end
-#     it 'should return the stored password'
-#     it 'should update the password stored in the keychain'
-#     it 'sholud create entries if they do not exist'
-#     it 'should store a nil password as an empty string'
-#     it 'should not cache the password'
-#     it 'should raise an exception for an unexepected result code'
-#   end
+  describe '#password=' do
+    before do
+      @item[KSecAttrServer] = 'example3.test.org'
+      @password = Time.now.to_s
+    end
+    it 'should return the stored password' do
+      @item.send(:password=, @password).should == @password
+    end
+    it 'should update the password stored in the keychain' do
+      @item.password = @password
+      @item.password.should == @password
+    end
+    ### PENDING
+    it 'should create entries if they do not exist'
+    ### PENDING
+    it 'should store a nil password as an empty string' do
+      @item.password = nil
+      @item.password.should == ''
+    end
+    it 'should not cache the password' do
+      @item.password = @password
+      @item.attributes.values.should_not include @password
+    end
+    it 'should raise an exception for an unexepected result code' do
+      @item[KSecClass] = ':)'
+      expect {
+        @item.password = @password
+      }.to raise_error Keychain::KeychainException
+    end
+  end
 
   describe '#account' do
     it 'should be equivalent to #[KSecAttrAccount]' do
