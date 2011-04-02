@@ -55,8 +55,8 @@ describe Keychain::Item do
       @item[KSecClass] = 'madeup!'
       expect { @item.password }.to raise_error Keychain::KeychainException
     end
-    it 'should not alter the stored attributes' do
-      before_attributes = @item.attributes
+    it 'should not mutate the stored attributes' do
+      before_attributes = @item.attributes.dup
       @item.password
       @item.attributes.should == before_attributes
     end
