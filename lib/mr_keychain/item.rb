@@ -70,28 +70,35 @@ class Item
   # @return [String] the saved password
   def password= new_password
     password_data = { KSecValueData => (new_password || '').to_data }
-    error_code = if exists?
-                   SecItemUpdate( @attributes, password_data )
-                 else
-                   SecItemAdd( @attributes.merge(password_data), nil )
-                 end
-
+    error_code    = if exists?
+                      SecItemUpdate( @attributes, password_data )
+                    else
+                      SecItemAdd( @attributes.merge(password_data), nil )
+                    end
     case error_code
     when ErrSecSuccess then password_data[KSecValueData].to_str
     else raise KeychainException.new( 'Updating password', error_code )
     end
   end
 
+  ##
+  # See if the item currently exists in the keychain.
   def exists?
     Keychain.item_exists? attributes
   end
 
 
+  # Equivalent to <tt>#attributes[KSecAttrAccount]</tt>
   def account; attributes[KSecAttrAccount]; end
+  # Equivalent to <tt>#attributes[KSecAttrAccount] =</tt>
   def account= value; attributes[KSecAttrAccount] = value; end
+  # Equivalent to <tt>#attributes[KSecAttrServer]</tt>
   def server; attributes[KSecAttrServer]; end
+  # Equivalent to <tt>#attributes[KSecAttrServer] =</tt>
   def server= value; attributes[KSecAttrServer] = value; end
+  # Equivalent to <tt>#attributes[KSecClass]</tt>
   def item_class; attributes[KSecClass]; end
+  # Equivalent to <tt>#attributes[KSecClass] = </tt>
   def item_class= value; attributes[KSecClass] = value; end
 
 end
