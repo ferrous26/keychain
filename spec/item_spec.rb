@@ -146,15 +146,27 @@ describe Keychain::Item do
 #     end
 #   end
 
-#   describe '#reload!' do
-#     it 'should return self' do
-#       @item.reload!.should be @item
-#     end
-#     it 'should update local @attributes with the keychain item'
-#     # @todo or should it just make @attributes an empty hash
-#     it 'should raise an exception if nothing is found'
-#     it 'should raise an exception for an unexpected error code'
-#   end
+  describe '#reload!' do
+    before do @item[KSecAttrServer] = 'github.com' end
+    it 'should return the reloaded attributes' do
+      ret = @item.reload!
+      ret.should be @item.attributes
+    end
+    it 'should update local @attributes with the keychain item' do
+      @item[KSecAttrProtocol].should be_nil
+      @item.reload!
+      @item[KSecAttrProtocol].should == KSecAttrProtocolHTTPS
+    end
+    # @todo or should it just make @attributes an empty hash
+    it 'should raise an exception if nothing is found' do
+      @item[KSecAttrServer] = 'madeup.fake.domain'
+      expect { @item.reload! }.to raise_error Keychain::KeychainException
+    end
+    it 'should raise an exception for an unexpected error code' do
+      @item[KSecClass] = 'asplode'
+      expect { @item.reload! }.to raise_error Keychain::KeychainException
+    end
+  end
 
   describe '#exists?' do
     it 'should return true if the item exists' do

@@ -87,6 +87,23 @@ class Item
     Keychain.item_exists? attributes
   end
 
+  ##
+  # Reload the cached item attributes from the keychain. An error
+  # will be raised if the item does not exist. If more than one
+  # item exists then the first one found will be reloaded.
+  #
+  # @raise [Keychain::KeychainException]
+  # @return [Keychain::Item]
+  def reload!
+    new_attributes = Pointer.new(:id)
+    old_attributes = @attributes.merge( KSecReturnAttributes => true,
+                                        KSecMatchLimit => KSecMatchLimitOne )
+    error_code     = SecItemCopyMatching(old_attributes, new_attributes)
+    case error_code
+    when ErrSecSuccess then @attributes = new_attributes[0]
+    else raise KeychainException.new( 'Reloading keychain item', error_code )
+    end
+  end
 
   # Equivalent to <tt>#attributes[KSecAttrAccount]</tt>
   def account; attributes[KSecAttrAccount]; end
