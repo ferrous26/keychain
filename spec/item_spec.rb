@@ -153,6 +153,7 @@ describe Keychain::Item do
       @item[KSecClass] = 'asplode'
       expect { @item.save! }.to raise_error Keychain::KeychainException
     end
+    it 'should not overwrite the existing password'
   end
 
   describe '#reload!' do
@@ -175,6 +176,7 @@ describe Keychain::Item do
       @item[KSecClass] = 'asplode'
       expect { @item.reload! }.to raise_error Keychain::KeychainException
     end
+    it 'should still find the item if attributes have changed and not been saved'
   end
 
   describe '#exists?' do
