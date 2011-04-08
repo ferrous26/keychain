@@ -44,7 +44,8 @@ class Item
   # should only happen if the item was deleted since this object was
   # instantiated or you changed some of the key/value pairs used to
   # lookup the object.
-  # @raise [Keychain::KeychainException]
+  #
+  # @raise [KeychainException] only for unexpected result codes
   # @return [String] UTF8 encoded password string
   def password
     search = @attributes.merge(
@@ -65,7 +66,7 @@ class Item
   # Updates the password associated with the keychain item. If the item does
   # not exist in the keychain it will be added first.
   #
-  # @raise [KeychainException]
+  # @raise [KeychainException] only for unexpected result codes
   # @param [String] new_password a UTF-8 encoded string
   # @return [String] the saved password
   def password= new_password
@@ -92,7 +93,7 @@ class Item
   # will be raised if the item does not exist. If more than one
   # item exists then the first one found will be reloaded.
   #
-  # @raise [Keychain::KeychainException]
+  # @raise [KeychainException] only for unexpected result codes
   # @return [Keychain::Item]
   def reload!
     new_attributes = Pointer.new(:id)
