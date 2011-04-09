@@ -127,18 +127,14 @@ class Item
   # @param [Symbol] meth the unique part of an attribute constant
   #                      (e.g. account for KSecAttrAccount)
   def method_missing meth, *args
-    method    = meth.to_s
-    setter    = method.chomp!('=')
-    predicate = method.chomp!('?')
-    const     = "KSecAttr#{'Is' if predicate}#{method.camelize!}"
-    if Kernel.const_defined?(const)
-      const_value = Kernel.const_get(const)
-      return (setter ? self.send(:[]=, const_value, *args) : self[const_value])
-    end
-    const    = "KSecAttrIs#{method}"
-    if Kernel.const_defined?(const)
-      const_value = Kernel.const_get(const)
-      return (setter ? self.send(:[]=, const_value, *args) : self[const_value])
+    method = meth.to_s
+    setter = method.chomp!('=')
+    method.camelize!.chomp!('?')
+    ["KSecAttr#{method}", "KSecAttrIs#{method}"].each do |const|
+      if Kernel.const_defined?(const)
+        value = Kernel.const_get(const)
+        return (setter ? self.send(:[]=, value, *args) : self[value])
+      end
     end
     super
   end
