@@ -6,6 +6,13 @@ framework 'Foundation'
 module Keychain
 end
 
+unless Kernel.const_defined?(:KSecAttrPassword)
+  # This is a special constant that allows {Keychain::Item} to treat a
+  # password as if it were like the other keychain item attributes.
+  # @return [Symbol]
+  KSecAttrPassword = :password
+end
+
 require 'mr_keychain/version'
 require 'mr_keychain/keychain'
 require 'mr_keychain/item'
