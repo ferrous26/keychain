@@ -204,7 +204,17 @@ describe Keychain::Item do
   # end
 
   describe '#unsaved' do
-    it 'should be a hash of changed data'
+    it 'returns a hash of all unsaved attribute changes' do
+      @item[KSecAttrServer] = 'madeup.domain.com'
+      @item.comment         = '1337 h4x'
+      @item.unsaved.keys.should include KSecAttrServer
+      @item.unsaved.keys.should include KSecAttrComment
+    end
+    it 'returns an empty hash right after item initialization' do
+      @item.unsaved.should be_empty
+    end
+    it 'return an empty hash right after saving' do
+    end
   end
 
 end
