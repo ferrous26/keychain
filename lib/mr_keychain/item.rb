@@ -165,7 +165,7 @@ class Item
                                         KSecMatchLimit => KSecMatchLimitOne )
     error_code     = SecItemCopyMatching(old_attributes, new_attributes)
     case error_code
-    when ErrSecSuccess then @attributes = new_attributes[0]
+    when ErrSecSuccess then @attributes = {}.merge(new_attributes[0])
     else raise KeychainException.new( 'Reloading keychain item', error_code )
     end
   end
