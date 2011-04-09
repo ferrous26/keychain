@@ -132,17 +132,17 @@ class Item
   end
 
   # Equivalent to <tt>#attributes[KSecAttrAccount]</tt>
-  def account; attributes[KSecAttrAccount]; end
+  def account; self[KSecAttrAccount]; end
   # Equivalent to <tt>#attributes[KSecAttrAccount] =</tt>
-  def account= value; attributes[KSecAttrAccount] = value; end
+  def account= value; self[KSecAttrAccount] = value; end
   # Equivalent to <tt>#attributes[KSecAttrServer]</tt>
-  def server; attributes[KSecAttrServer]; end
+  def server; self[KSecAttrServer]; end
   # Equivalent to <tt>#attributes[KSecAttrServer] =</tt>
-  def server= value; attributes[KSecAttrServer] = value; end
+  def server= value; self[KSecAttrServer] = value; end
   # Equivalent to <tt>#attributes[KSecClass]</tt>
-  def item_class; attributes[KSecClass]; end
+  def item_class; self[KSecClass]; end
   # Equivalent to <tt>#attributes[KSecClass] = </tt>
-  def item_class= value; attributes[KSecClass] = value; end
+  def item_class= value; self[KSecClass] = value; end
 
 end
 end
