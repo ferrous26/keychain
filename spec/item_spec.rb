@@ -24,7 +24,7 @@ describe Keychain::Item do
       @item[KSecClass].should == KSecClassInternetPassword
     end
     it 'should add a special case for argument KSecAttrPassword' do
-      @item[KSecAttrServer] = 'github.com'
+      @item[KSecAttrServer] = 'example.test.org'
       @item[KSecAttrPassword].should == @item.password
     end
   end
