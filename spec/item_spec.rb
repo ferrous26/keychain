@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Keychain::Item do
 
   def sneak_peak_attrs item
-    item.get_instance_variable(:@attributes) # HACK!
+    item.instance_variable_get(:@attributes) # HACK!
   end
 
   before do @item = Keychain::Item.new end
