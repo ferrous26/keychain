@@ -117,16 +117,20 @@ class Item
   end
 
   ##
-  # @todo Need to support names like :is_invisible? and :invisible=
-  #
   # Dynamic get/set for the various attributes that a keychain item can have.
   #
   # @param [Symbol] meth the unique part of an attribute constant
   #                      (e.g. account for KSecAttrAccount)
   def method_missing meth, *args
-    method = meth.to_s
-    setter = method.chomp!('=')
-    const  = "KSecAttr#{method.camelize!}"
+    method    = meth.to_s
+    setter    = method.chomp!('=')
+    predicate = method.chomp!('?')
+    const     = "KSecAttr#{'Is' if predicate}#{method.camelize!}"
+    if Kernel.const_defined?(const)
+      const_value = Kernel.const_get(const)
+      return (setter ? self.send(:[]=, const_value, *args) : self[const_value])
+    end
+    const    = "KSecAttrIs#{method}"
     if Kernel.const_defined?(const)
       const_value = Kernel.const_get(const)
       return (setter ? self.send(:[]=, const_value, *args) : self[const_value])
