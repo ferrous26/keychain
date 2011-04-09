@@ -40,7 +40,7 @@ class Item
   # @example Get the password
   #   @item[KSecAttrPassword]
   def [] key
-    @attributes[key]
+    key == KSecAttrPassword ? self.password : @attributes[key]
   end
 
   ##
