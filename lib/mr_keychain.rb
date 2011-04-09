@@ -13,6 +13,7 @@ unless Kernel.const_defined?(:KSecAttrPassword)
   KSecAttrPassword = :password
 end
 
+require 'mr_keychain/core_ext'
 require 'mr_keychain/version'
 require 'mr_keychain/keychain'
 require 'mr_keychain/item'
