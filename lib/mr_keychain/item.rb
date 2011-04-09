@@ -63,9 +63,14 @@ class Item
 
   # @group Alternate accessors
 
-  # Equivalent to <tt>#[KSecClass]</tt>
+  ##
+  # Read the value of the KSecClass attribute; equivalent to
+  # <tt>#[KSecClass]</tt>.
   def item_class; self[KSecClass]; end
-  # Equivalent to <tt>#[KSecClass] = </tt>
+
+  ##
+  # Set the value of the KSecClass attribute; equivalent to
+  # <tt>#[KSecClass] = value</tt>.
   def item_class= value; self[KSecClass] = value; end
 
   ##
