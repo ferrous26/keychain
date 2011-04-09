@@ -57,7 +57,7 @@ class Item
   # @example Set the password
   #   @item[KSecAttrPassword] = 'raspberries'
   def []= key, value
-    @tainted[key] = true if value != @attributes[key]
+    @tainted[key] = true unless value == @attributes[key]
     @attributes[key] = value
   end
 
