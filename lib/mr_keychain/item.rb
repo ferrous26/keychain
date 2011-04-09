@@ -8,7 +8,7 @@ module Keychain
 #
 # @todo Need to add some documentation to explain locally cached attributes
 #       and how they need to be {#save!}'d in order to persist changes and
-#       additions.
+#       additions, with the exception of password changes.
 #
 # Represents an entry in the login keychain.
 #
@@ -49,6 +49,8 @@ class Item
   # Direct access to the attributes hash of the keychain item. You can
   # get a list of all the attributes from Apple's documentation (see the
   # README file).
+  #
+  # Changes to the password will be saved to the keychain immediately.
   #
   # @example Set a comment
   #   @item[KSecAttrComment] = 'my alternative account'
@@ -104,6 +106,8 @@ class Item
   ##
   # Updates the password associated with the keychain item. If the item does
   # not exist in the keychain it will be added first.
+  #
+  # Changes to the password will be saved to the keychain immediately.
   #
   # @raise [KeychainException] only for unexpected result codes
   # @param [String] new_password a UTF-8 encoded string
