@@ -118,6 +118,10 @@ describe Keychain::Item do
       @item[KSecAttrModificationDate] = 'test write name'
       @item.modification_date.should == @item[KSecAttrModificationDate]
     end
+    it 'should do attribute lookups for predicate attributes' do
+      @item[KSecAttrIsInvisible] = true
+      @item.should be_invisible
+    end
     it 'should do attribute setting for simple attributes' do
       @item.server = 'example.org'
       @item[KSecAttrServer].should == 'example.org'
@@ -125,6 +129,10 @@ describe Keychain::Item do
     it 'should do attribute setting for complex attributes' do
       @item.authentication_type = KSecAttrAuthenticationTypeNTLM
       @item[KSecAttrAuthenticationType].should == KSecAttrAuthenticationTypeNTLM
+    end
+    it 'should do attribute setting for really complex attributes' do
+      @item.invisible = true
+      @item[KSecAttrIsInvisible].should be_true
     end
     it 'should delegate up if the attribute is not found' do
       expect {

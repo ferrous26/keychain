@@ -117,7 +117,7 @@ class Item
   end
 
   ##
-  # @todo Need to support names like :modification_date
+  # @todo Need to support names like :is_invisible? and :invisible=
   #
   # Dynamic get/set for the various attributes that a keychain item can have.
   #
@@ -126,7 +126,7 @@ class Item
   def method_missing meth, *args
     method = meth.to_s
     setter = method.chomp!('=')
-    const  = "KSecAttr#{method.capitalize}"
+    const  = "KSecAttr#{method.camelize!}"
     if Kernel.const_defined?(const)
       const_value = Kernel.const_get(const)
       return (setter ? self.send(:[]=, const_value, *args) : self[const_value])
