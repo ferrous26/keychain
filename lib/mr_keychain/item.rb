@@ -18,25 +18,47 @@ class Item
 
   # @return [Hash]
   attr_accessor :attributes
-
-  # Direct access to the attributes hash of the keychain item.
   ##
-  def [] key
-    @attributes[key]
-  end
-
-  # Direct access to the attributes hash of the keychain item.
-  def []= key, value
-    @attributes[key] = value
-  end
-
-  ##
+  # @todo Exploit hash lookup failure blocks to do dynamic attribute lookup
+  #
   # Each Keychain::Item should contain a KSecClass at the very least; the
   # default value is KSecClassInternetPassword.
   #
   # @param [Hash] attributes
-  def initialize attributes = {}
-    @attributes = { KSecClass => KSecClassInternetPassword }.merge(attributes)
+  def initialize attrs = {}
+    @tainted    = {}
+    @attributes = { KSecClass => KSecClassInternetPassword }.merge(attrs)
+  end
+
+  ##
+  # Direct access to the attributes hash of the keychain item. You can
+  # get a list of all the attributes from Apple's documentation (see the
+  # README file).
+  #
+  # @example Get the server address
+  #   @item[KSecAttrServer]
+  # @example Get the account name
+  #   @item[KSecAttrAccount]
+  # @example Get the password
+  #   @item[KSecAttrPassword]
+  def [] key
+    @attributes[key]
+  end
+
+  ##
+  # Direct access to the attributes hash of the keychain item. You can
+  # get a list of all the attributes from Apple's documentation (see the
+  # README file).
+  #
+  # @example Set a comment
+  #   @item[KSecAttrComment] = 'my alternative account'
+  # @example Set the port
+  #   @item[KSecAttrPort] = 9001
+  # @example Set the password
+  #   @item[KSecAttrPassword] = 'raspberries'
+  def []= key, value
+    @tainted[key] = true if value != @attributes[key]
+    @attributes[key] = value
   end
 
   ##
