@@ -41,9 +41,7 @@ describe Keychain::Item do
   end
 
   describe '#password' do
-    before do
-      @item[KSecAttrServer] = 'example.test.org'
-    end
+    before do @item[KSecAttrServer] = 'example.test.org' end
     it 'should return the stored password' do
       @item.password.should == 'password'
     end
@@ -53,17 +51,18 @@ describe Keychain::Item do
     end
     it 'should not cache the password' do
       cached_password = @item.password
-      @item.attributes.values.should_not include cached_password
+      sneak_peak_attrs(@item).values.should_not include cached_password
     end
     it 'should raise an exception for an unexpected result code' do
       @item[KSecClass] = 'madeup!'
       expect { @item.password }.to raise_error Keychain::KeychainException
     end
     it 'should not mutate the stored attributes' do
-      before_attributes = @item.attributes.dup
+      before_attributes = sneak_peak_attrs(@item).dup
       @item.password
-      @item.attributes.should == before_attributes
+      sneak_peak_attrs(@item).should == before_attributes
     end
+    it 'should still find the original item if unsaved changes have been made'
   end
 
   describe '#password=' do
@@ -78,16 +77,13 @@ describe Keychain::Item do
       @item.password = @password
       @item.password.should == @password
     end
-    ### PENDING
-    it 'should create entries if they do not exist'
-    ### PENDING
     it 'should store a nil password as an empty string' do
       @item.password = nil
       @item.password.should == ''
     end
     it 'should not cache the password' do
       @item.password = @password
-      @item.attributes.values.should_not include @password
+      sneak_peak_attrs(@item).values.should_not include @password
     end
     it 'should raise an exception for an unexepected result code' do
       @item[KSecClass] = ':)'
@@ -95,6 +91,8 @@ describe Keychain::Item do
         @item.password = @password
       }.to raise_error Keychain::KeychainException
     end
+    it 'should create entries if they do not exist'
+    it 'should still find the original item if unsaved changes have been made'
   end
 
   describe '#account' do
@@ -164,7 +162,7 @@ describe Keychain::Item do
     before do @item[KSecAttrServer] = 'github.com' end
     it 'should return the reloaded attributes' do
       ret = @item.reload!
-      ret.should be @item.attributes
+      ret.should be sneak_peak_attrs(@item)
     end
     it 'should update local @attributes with the keychain item' do
       @item[KSecAttrProtocol].should be_nil
@@ -180,7 +178,7 @@ describe Keychain::Item do
       @item[KSecClass] = 'asplode'
       expect { @item.reload! }.to raise_error Keychain::KeychainException
     end
-    it 'should still find the item if attributes have changed and not been saved'
+    it 'should still find the original item if unsaved changes have been made'
   end
 
   describe '#exists?' do
@@ -198,6 +196,7 @@ describe Keychain::Item do
         @item.exists?
       }.to raise_error Keychain::KeychainException
     end
+    it 'should still find the original item if unsaved changes have been made'
   end
 
 end
