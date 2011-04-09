@@ -6,9 +6,9 @@ module Keychain
 #       items that were not created using the same program that is asking
 #       for the password.
 #
-# @ todo Need to add some documentation to explain locally cached attributes
-#        and how they need to be {#save!}'d in order to persist changes and
-#        additions.
+# @todo Need to add some documentation to explain locally cached attributes
+#       and how they need to be {#save!}'d in order to persist changes and
+#       additions.
 #
 # Represents an entry in the login keychain.
 #
