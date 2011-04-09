@@ -110,7 +110,7 @@ class Item
   ##
   # See if the item currently exists in the keychain.
   def exists?
-    Keychain.item_exists? attributes
+    Keychain.item_exists?(@attributes)
   end
 
   ##
