@@ -109,45 +109,27 @@ describe Keychain::Item do
     it 'should still find the original item if unsaved changes have been made'
   end
 
-  describe '#account' do
-    it 'should be equivalent to #[KSecAttrAccount]' do
+  describe '#method_missing' do
+    it 'should do attribute lookups for simple attributes' do
       @item[KSecAttrAccount] = 'test read name'
       @item.account.should == @item[KSecAttrAccount]
     end
-  end
-
-  describe '#account=' do
-    it 'should be equivalent to #[KSecAttrAccount]=' do
-      @item.account = 'test write name'
-      @item[KSecAttrAccount].should == 'test write name'
+    it 'should do attribute lookups for complex_attributes' do
+      @item.[KSecAttrModificationDate] = 'test write name'
+      @item.modification_date.should == @item[KSecAttrModificationDate]
     end
-  end
-
-  describe '#server' do
-    it 'should be equivalent to #[KSecAttrServer]' do
-      @item[KSecAttrServer] = 'github.com'
-      @item.server.should == @item[KSecAttrServer]
-    end
-  end
-
-  describe '#server=' do
-    it 'should be equivalent to #[KSecAttrServer]=' do
+    it 'should do attribute setting for simple attributes' do
       @item.server = 'example.org'
       @item[KSecAttrServer].should == 'example.org'
     end
-  end
-
-  describe '#item_class' do
-    it 'should be equivalent to #[KSecClass]' do
-      @item[KSecClass] = 'duh, winning'
-      @item.item_class.should == @item[KSecClass]
+    it 'should do attribute setting for complex attributes' do
+      @item.authentication_type = KSecAttrAuthenticationTypeNTLM
+      @item[KSecAttrAuthenticationType].should == KSecAttrAuthenticationTypeNTLM
     end
-  end
-
-  describe '#item_class=' do
-    it 'should be equivalent to #[KSecClass]=' do
-      @item.item_class = 'biwinning'
-      @item[KSecClass].should == 'biwinning'
+    it 'should delegate up if the attribute is not found' do
+      expect {
+        @item.totally_fake_method_name
+      }.to raise_error NoMethodError
     end
   end
 
