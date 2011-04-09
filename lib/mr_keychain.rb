@@ -10,7 +10,7 @@ unless Kernel.const_defined?(:KSecAttrPassword)
   # This is a special constant that allows {Keychain::Item} to treat a
   # password as if it were like the other keychain item attributes.
   # @return [Symbol]
-  KSecAttrPassword = :password
+  KSecAttrPassword = 'pass'
 end
 
 require 'mr_keychain/core_ext'
