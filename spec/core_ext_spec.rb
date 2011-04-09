@@ -13,4 +13,7 @@ describe NSMutableString, '#camelize!' do
     string = 'TestString'
     string.camelize!.should be string
   end
+  it 'returns nil for an empty string' do
+    ''.camelize!.should be_nil
+  end
 end
