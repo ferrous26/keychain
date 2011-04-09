@@ -62,6 +62,12 @@ class Item
   end
 
   # @group Alternate accessors
+
+  # Equivalent to <tt>#[KSecClass]</tt>
+  def item_class; self[KSecClass]; end
+  # Equivalent to <tt>#[KSecClass] = </tt>
+  def item_class= value; self[KSecClass] = value; end
+
   ##
   # @note Blank passwords should come back as an empty string, but that
   #       hasn't been tested thoroughly.
@@ -111,7 +117,26 @@ class Item
   end
 
   ##
+  # @todo Need to support names like :modification_date
+  #
+  # Dynamic get/set for the various attributes that a keychain item can have.
+  #
+  # @param [Symbol] meth the unique part of an attribute constant
+  #                      (e.g. account for KSecAttrAccount)
+  def method_missing meth, *args
+    method = meth.to_s
+    setter = method.chomp!('=')
+    const  = "KSecAttr#{method.capitalize}"
+    if Kernel.const_defined?(const)
+      const_value = Kernel.const_get(const)
+      return (setter ? self.send(:[]=, const_value, *args) : self[const_value])
+    end
+    super
+  end
+
   # @endgroup
+
+  ##
   # See if the item currently exists in the keychain.
   def exists?
     Keychain.item_exists?(@attributes)
@@ -135,18 +160,6 @@ class Item
     end
   end
 
-  # Equivalent to <tt>#attributes[KSecAttrAccount]</tt>
-  def account; self[KSecAttrAccount]; end
-  # Equivalent to <tt>#attributes[KSecAttrAccount] =</tt>
-  def account= value; self[KSecAttrAccount] = value; end
-  # Equivalent to <tt>#attributes[KSecAttrServer]</tt>
-  def server; self[KSecAttrServer]; end
-  # Equivalent to <tt>#attributes[KSecAttrServer] =</tt>
-  def server= value; self[KSecAttrServer] = value; end
-  # Equivalent to <tt>#attributes[KSecClass]</tt>
-  def item_class; self[KSecClass]; end
-  # Equivalent to <tt>#attributes[KSecClass] = </tt>
-  def item_class= value; self[KSecClass] = value; end
 
 end
 end
