@@ -35,9 +35,20 @@ describe Keychain::Item do
       @item[KSecAttrServer] = site
       @item[KSecAttrServer].should be site
     end
-    it 'should only save changes locally'
-    it 'should mark changed attributes as locally changed'
-    it 'should add a special case for argument KSecAttrPassword'
+    it 'should only save changes locally' do
+      comment = 'roflcopter'
+      @item[KSecAttrServer] = 'github.com'
+      @item.reload!
+      @item[KSecAttrComment] = comment
+      new_item = Keychain.item( KSecAttrServer => 'github.com' )
+      new_item[KSecAttrComment].should_not == comment
+    end
+    it 'should add a special case for argument KSecAttrPassword' do
+      def @item.password= value
+        :got_called
+      end
+      (@item.send(:[]=,KSecAttrPassword,'test')).should == :got_called
+    end
   end
 
   describe '#item_class' do
@@ -170,7 +181,6 @@ describe Keychain::Item do
       @item.reload!
       @item[KSecAttrProtocol].should == KSecAttrProtocolHTTPS
     end
-    # @todo or should it just make @attributes an empty hash
     it 'should raise an exception if nothing is found' do
       @item[KSecAttrServer] = 'madeup.fake.domain'
       expect { @item.reload! }.to raise_error Keychain::KeychainException
@@ -180,6 +190,8 @@ describe Keychain::Item do
       expect { @item.reload! }.to raise_error Keychain::KeychainException
     end
     it 'should still find the original item if unsaved changes have been made'
+    it 'should overwrite local changes to existing attributes'
+    it 'should not overwrite local changes to new attributes'
   end
 
   # describe '#save!' do
