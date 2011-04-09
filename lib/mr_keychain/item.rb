@@ -169,6 +169,15 @@ class Item
     end
   end
 
+  ##
+  # A hash of the attributes which have been changed locally and not been
+  # saved into the keychain.
+  #
+  # @return [Hash]
+  def unsaved
+    keys = @tainted.keys
+    @attributes.select { |key| keys.include?(key) }
+  end
 
 end
 end
