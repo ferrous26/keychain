@@ -2,37 +2,41 @@ require 'spec_helper'
 
 describe Keychain::Item do
 
+  def sneak_peak_attrs item
+    item.get_instance_variable(:@attributes) # HACK!
+  end
+
   before do @item = Keychain::Item.new end
 
-  describe 'attributes' do
-    it 'is readable' do
-      @item.should respond_to :attributes
-    end
-    it 'is writable' do
-      @item.should respond_to :attributes=
-    end
+  describe '#initialize' do
     it 'is initialized with a default class' do
-      @item.attributes[KSecClass].should == KSecClassInternetPassword
+      @item[KSecClass].should == KSecClassInternetPassword
     end
     it 'allows the default class to be overridden' do
-      ret = Keychain::Item.new(KSecClass => 'zomg made up')
-      ret.attributes[KSecClass].should == 'zomg made up'
+      klass = 'zomg made up'
+      ret = Keychain::Item.new(KSecClass => klass)
+      ret[KSecClass].should be klass
     end
   end
 
   describe '#[]' do
-    it 'should be equivalent to #attributes' do
-      @item.attributes[:test] = 'test'
-      @item[:test].should == 'test'
+    it 'allows reading of keychain attributes' do
+      @item[KSecClass].should == KSecClassInternetPassword
     end
-    it 'should add a special case for argument KSecAttrPassword'
+    it 'should add a special case for argument KSecAttrPassword' do
+      @item[KSecAttrServer] = 'github.com'
+      @item[KSecAttrPassword].should == @item.password
+    end
   end
 
   describe '#[]=' do
-    it 'should be equivalent to #attributes=' do
-      @item[:test1] = 'test'
-      @item.attributes[:test1].should == 'test'
+    it 'allows writing of attributes' do
+      site = 'a.website.com'
+      @item[KSecAttrServer] = site
+      @item[KSecAttrServer].should be site
     end
+    it 'should only save changes locally'
+    it 'should mark changed attributes as locally changed'
     it 'should add a special case for argument KSecAttrPassword'
   end
 

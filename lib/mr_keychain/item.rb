@@ -16,8 +16,6 @@ module Keychain
 # that you change a password, it will be written to the keychain immeadiately.
 class Item
 
-  # @return [Hash]
-  attr_accessor :attributes
   ##
   # @todo Exploit hash lookup failure blocks to do dynamic attribute lookup
   #
