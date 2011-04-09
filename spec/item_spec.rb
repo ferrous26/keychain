@@ -40,6 +40,20 @@ describe Keychain::Item do
     it 'should add a special case for argument KSecAttrPassword'
   end
 
+  describe '#item_class' do
+    it 'should be equivalent to #[KSecClass]' do
+      @item[KSecClass] = 'duh, winning'
+      @item.item_class.should == @item[KSecClass]
+    end
+  end
+
+  describe '#item_class=' do
+    it 'should be equivalent to #[KSecClass]=' do
+      @item.item_class = 'biwinning'
+      @item[KSecClass].should == 'biwinning'
+    end
+  end
+
   describe '#password' do
     before do @item[KSecAttrServer] = 'example.test.org' end
     it 'should return the stored password' do
@@ -137,30 +151,23 @@ describe Keychain::Item do
     end
   end
 
-  describe '#unsaved' do
-    it 'should be a hash of changed data'
+  describe '#exists?' do
+    it 'should return true if the item exists' do
+      @item[KSecAttrServer] = 'github.com'
+      @item.should exist
+    end
+    it 'should return false if the item does not exist' do
+      @item[KSecAttrServer] = 'fake.example.org'
+      @item.should_not exist
+    end
+    it 'should return false if there is an unexpected result code' do
+      expect {
+        @item[KSecClass] = 'ERROR'
+        @item.exists?
+      }.to raise_error Keychain::KeychainException
+    end
+    it 'should still find the original item if unsaved changes have been made'
   end
-
-  # describe '#save!' do
-  #   before do @item[KSecAttrServer] = 'example9001.org' end
-  #   it 'should return the saved attributes' do
-  #     attrs = sneak_peak_attrs(@item)
-  #     @item.save!.should be attrs
-  #   end
-  #   it 'should update a keychain item with @attributes if the item exists' do
-  #     now = Time.now
-  #     other_item = @item.dup
-  #     @item[KSecAttrComment] = now
-  #     @item.save!
-  #     other_item.reload![KSecAttrComment].should == now
-  #   end
-  #   it 'should create a new keychain item if it does not exist'
-  #   it 'should raise an exception for an unexpected result code' do
-  #     @item[KSecClass] = 'asplode'
-  #     expect { @item.save! }.to raise_error Keychain::KeychainException
-  #   end
-  #   it 'should not overwrite the existing password'
-  # end
 
   describe '#reload!' do
     before do @item[KSecAttrServer] = 'github.com' end
@@ -185,22 +192,29 @@ describe Keychain::Item do
     it 'should still find the original item if unsaved changes have been made'
   end
 
-  describe '#exists?' do
-    it 'should return true if the item exists' do
-      @item[KSecAttrServer] = 'github.com'
-      @item.should exist
-    end
-    it 'should return false if the item does not exist' do
-      @item[KSecAttrServer] = 'fake.example.org'
-      @item.should_not exist
-    end
-    it 'should return false if there is an unexpected result code' do
-      expect {
-        @item[KSecClass] = 'ERROR'
-        @item.exists?
-      }.to raise_error Keychain::KeychainException
-    end
-    it 'should still find the original item if unsaved changes have been made'
+  # describe '#save!' do
+  #   before do @item[KSecAttrServer] = 'example9001.org' end
+  #   it 'should return the saved attributes' do
+  #     attrs = sneak_peak_attrs(@item)
+  #     @item.save!.should be attrs
+  #   end
+  #   it 'should update a keychain item with @attributes if the item exists' do
+  #     now = Time.now
+  #     other_item = @item.dup
+  #     @item[KSecAttrComment] = now
+  #     @item.save!
+  #     other_item.reload![KSecAttrComment].should == now
+  #   end
+  #   it 'should create a new keychain item if it does not exist'
+  #   it 'should raise an exception for an unexpected result code' do
+  #     @item[KSecClass] = 'asplode'
+  #     expect { @item.save! }.to raise_error Keychain::KeychainException
+  #   end
+  #   it 'should not overwrite the existing password'
+  # end
+
+  describe '#unsaved' do
+    it 'should be a hash of changed data'
   end
 
 end
