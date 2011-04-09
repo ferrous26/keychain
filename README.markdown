@@ -89,6 +89,10 @@ passwords right now. The interface should remain the same when/if it
 is expanded to include the other types of items that the keychain
 holds.
 
+In order to run the tests on your system, you need to have a specific
+dataset already installed into your keychain; I will eventually
+document the details of this required fixture.
+
 Contributing to keychain
 ========================
 
