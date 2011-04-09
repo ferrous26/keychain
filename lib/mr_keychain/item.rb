@@ -59,7 +59,8 @@ class Item
   # @example Set the password
   #   @item[KSecAttrPassword] = 'raspberries'
   def []= key, value
-    @tainted[key] = true unless value == @attributes[key]
+    return self.send(:password=, value) if key == KSecAttrPassword
+    @tainted[key]    = true
     @attributes[key] = value
   end
 
