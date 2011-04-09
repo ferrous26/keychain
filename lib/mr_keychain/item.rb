@@ -28,6 +28,8 @@ class Item
     @attributes = { KSecClass => KSecClassInternetPassword }.merge(attrs)
   end
 
+  # @group Accessors
+
   ##
   # Direct access to the attributes hash of the keychain item. You can
   # get a list of all the attributes from Apple's documentation (see the
@@ -59,6 +61,7 @@ class Item
     @attributes[key] = value
   end
 
+  # @group Alternate accessors
   ##
   # @note Blank passwords should come back as an empty string, but that
   #       hasn't been tested thoroughly.
@@ -108,6 +111,7 @@ class Item
   end
 
   ##
+  # @endgroup
   # See if the item currently exists in the keychain.
   def exists?
     Keychain.item_exists?(@attributes)
