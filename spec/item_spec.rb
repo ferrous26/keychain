@@ -114,7 +114,7 @@ describe Keychain::Item do
       @item[KSecAttrAccount] = 'test read name'
       @item.account.should == @item[KSecAttrAccount]
     end
-    it 'should do attribute lookups for complex_attributes' do
+    it 'should do attribute lookups for complex attributes' do
       @item[KSecAttrModificationDate] = 'test write name'
       @item.modification_date.should == @item[KSecAttrModificationDate]
     end
