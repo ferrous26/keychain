@@ -15,3 +15,13 @@ describe Keychain::Exception, '#initialize' do
     exception.message.should match /not implemented/
   end
 end
+
+describe Keychain::Exception, '#code' do
+  it 'should be the cached error code' do
+    exception = Keychain::KeychainException.new 'my prefix', 0
+    exception.code.should == 0
+
+    exception = Keychain::KeychainException.new 'my prefix', -25293
+    exception.code.should == -25293
+  end
+end
