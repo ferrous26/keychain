@@ -9,7 +9,7 @@ end
 unless Kernel.const_defined?(:KSecAttrPassword)
   # This is a special constant that allows {Keychain::Item} to treat a
   # password as if it were like the other keychain item attributes.
-  # @return [Symbol]
+  # @return [String]
   KSecAttrPassword = 'pass'
 end
 
