@@ -110,7 +110,9 @@ describe Keychain do
       ret = Keychain.items( KSecReturnData => true )
       ret.first.should be_instance_of Keychain::Item
     end
-
+    it 'should return all internet passwords if I pass no arguments' do
+      Keychain.items.size.should satisfy { |size| size > 2 }
+    end
   end
 
 end
