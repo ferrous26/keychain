@@ -1,10 +1,8 @@
-Keychain
-========
+# Keychain
 
 A simple class for working with the Mac OS X keychain.
 
-Design Concept
-==============
+## Design Concept
 
 The API is designed for you to work with the keychain based on
 key/value pair matching.
@@ -14,8 +12,7 @@ Leopard APIs for accessing the keychain. Ideally things now work in a
 much more Rubyish way than they would had you used the originally set
 of C functions.
 
-Basics
-======
+## Basics
 
 There are 4 categories of key/value pairs that you combine to make
 queries.
@@ -34,13 +31,11 @@ there must be at least one of these, but more can be
 specified. However, most methods in `mr_keychain` will set the return
 type for you and prevent you from overriding.
 
-Reference
-=========
+## Reference
 
 To learn more about using the Keychain on OS X, see Apple's [Keychain Services Programming Guide](http://developer.apple.com/library/ios/#documentation/Security/Conceptual/keychainServConcepts/01introduction/introduction.html) and the [Keychain Services Reference](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html).
 
-Example Usage
-=============
+## Example Usage
 
         # get an item
         item = Keychain::Item.new
@@ -74,15 +69,13 @@ Example Usage
            puts 'No such item exists, maybe you need different criteria?'
         end
 
-TODO
-====
+## TODO
 
 - Make the simple cases simpler
 - Allow more succinct names for constants and guess the actual values
 - Allow deleting of keychain items
 
-Caveats
-=======
+## Caveats
 
 The APIs that this library depends on can only access to internet
 passwords right now. The interface should remain the same when/if it
@@ -93,8 +86,7 @@ In order to run the tests on your system, you need to have a specific
 dataset already installed into your keychain; I will eventually
 document the details of this required fixture.
 
-Contributing to keychain
-========================
+## Contributing to keychain
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
@@ -104,8 +96,7 @@ Contributing to keychain
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
-Copyright
-=========
+## Copyright
 
 Copyright (c) 2011 Mark Rada. See LICENSE.txt for
 further details.
