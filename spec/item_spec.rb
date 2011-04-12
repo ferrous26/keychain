@@ -29,6 +29,21 @@ describe Keychain::Item do
     end
   end
 
+  describe '#attributes' do
+    it 'should include all the attributes' do
+      @item['test'] = 'test'
+      @item[KSecAttrServer] = 'example.org'
+      @item[:madeupkey] = 'madeupvalue'
+
+      @item.attributes.keys.should include 'test'
+      @item.attributes.keys.should include KSecAttrServer
+      @item.attributes.keys.should include :madeupkey
+    end
+    it 'should be a duplicate of the attributes' do
+      @item.attributes.should_not be @item.instance_variable_get(:@attributes)
+    end
+  end
+
   describe '#[]=' do
     it 'allows writing of attributes' do
       site = 'a.website.com'

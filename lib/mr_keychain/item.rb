@@ -31,6 +31,14 @@ class Item
   # @group Accessors
 
   ##
+  # Get a copy of the attributes for the keychain item.
+  #
+  # @return [Hash]
+  def attributes
+    @attributes.dup
+  end
+
+  ##
   # Direct access to the attributes hash of the keychain item. You can
   # get a list of all the attributes from Apple's documentation (see the
   # README file).
