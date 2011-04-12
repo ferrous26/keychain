@@ -1,225 +1,114 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require 'spec_helper'
 
-# @todo get the spec tests to use mock data
-describe 'Keychain' do
+describe Keychain do
 
-  describe 'Item' do
-
-    before do
-      @item = Keychain::Item.new
+  describe '.item_exists?' do
+    it 'returns false if the item does not exist' do
+      Keychain.item_exists?( KSecAttrProtocol => KSecAttrProtocolIRCS,
+                             KSecAttrServer   => 'github.com' ).should be_false
     end
-
-
-    describe 'attributes attribute' do
-      it 'is readable' do
-        @item.respond_to?(:attributes).should == true
-      end
-
-      it 'is writable' do
-        @item.respond_to?(:attributes=).should == true
-      end
-
-      it 'should be initialized with the class being set' do
-        @item.attributes[KSecClass].should_not == nil
-      end
-
-      it 'should be initialized to be of the interenet class' do
-        @item.attributes[KSecClass].should == KSecClassInternetPassword
-      end
-
-      it 'should allow the class to be overriden' do
-        @item = Keychain::Item.new( KSecClass => 'different' )
-        @item.attributes[KSecClass].should == 'different'
-      end
+    it 'returns true if at least one item matches' do
+      Keychain.item_exists?( KSecAttrProtocol => KSecAttrProtocolHTTPS,
+                             KSecAttrServer   => 'github.com' ).should be_true
     end
-
-
-    describe '#exists?' do
-      it 'returns false if the item does not exist' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolIRCS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.exists?.should == false
-      end
-
-      it 'returns true if the item exists' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.exists?.should == true
-      end
-
-      it 'raises an exception for unexpected error codes' do
-        @item.attributes[KSecClass] = 'made up class'
-        expect { @item.exists? }.to raise_exception(Keychain::KeychainException)
-      end
+    it 'returns true if there are multiple matches' do
+      Keychain.item_exists?( KSecAttrProtocol => KSecAttrProtocolHTTPS ).should be_true
     end
-
-
-    describe '#password' do
-      it 'should return a string with the password' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.password.class.should == String
-      end
-
-      it 'should raise an exception if no password is found' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolIRCS,
-          KSecAttrServer   => 'github.com'
-        )
-        expect { @item.password }.to raise_exception(Keychain::KeychainException)
-      end
+    it 'should not mutate the given search dictionary' do
+      search_dict = (original_dict = { KSecAttrServer => 'github.com' }).dup
+      Keychain.item_exists?( search_dict )
+      search_dict.should == original_dict
     end
-
-
-    describe '#metadata' do
-      it 'should return a hash' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.metadata.class.should == Hash
-      end
-
-      it 'should raise an exception if nothing is found' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolIRCS,
-          KSecAttrServer   => 'github.com'
-        )
-        expect { @item.metadata }.to raise_exception(Keychain::KeychainException)
-      end
-
-      # this assumes the keychain item has more metadata
-      it 'should not overwrite @attributes' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        metadata = @item.metadata
-        @item.attributes.should_not == metadata
-      end
+    it 'should allow filtering based on attribute key/value pairs' do
+      Keychain.item_exists?( KSecAttrProtocol => KSecAttrProtocolHTTPS
+                             ).should be_true
     end
-
-
-    describe '#metadata!' do
-      it 'should return a hash' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.metadata.class.should == Hash
-      end
-
-      it 'should raise an exception if nothing is found' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolIRCS,
-          KSecAttrServer   => 'github.com'
-        )
-        expect { @item.metadata }.to raise_exception(Keychain::KeychainException)
-      end
-
-      # this assumes the keychain item has more metadata
-      it 'should overwrite @attributes' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        metadata = @item.metadata!
-        @item.attributes.should == metadata
-      end
+    it 'should allow filtering based on search key/value pairs' do
+      Keychain.item_exists?( KSecMatchCaseInsensitive => true,
+                             KSecAttrServer => 'Github.COM'
+                             ).should be_true
     end
-
-
-    describe '#[]' do
-      it 'should be equivalent to #attributes' do
-        @item.attributes[:test] = 'test'
-        @item[:test].should == 'test'
-        @item[KSecClass].should == @item.attributes[KSecClass]
-      end
+    it 'should ignore any extra return type key/value pairs' do
+      Keychain.item_exists?( KSecReturnData => true ).should be_true
     end
-
-
-    describe '#[]=' do
-      it 'should be equivalent to #attributes=' do
-        @item[:test] = 'test'
-        @item.attributes[:test].should == 'test'
-      end
+    it 'should raise an error for unexpected result codes' do
+      expect {
+        Keychain.item_exists?( KSecClass => 'explode-o-rama' )
+      }.to raise_error Keychain::KeychainException
     end
+  end
 
+  describe '.item' do
+    it 'should return nil if nothing is found' do
+      Keychain.item( KSecAttrServer => 'fake.example.org' ).should be_nil
+    end
+    it 'should return a single item if a single item is found' do
+      ret = Keychain.item KSecAttrServer => 'github.com'
+      ret.should be_instance_of Keychain::Item
+    end
+    it 'should raise an error in case of an unexpected result code' do
+      expect {
+        Keychain.item( KSecClass => 'fake class name' )
+      }.to raise_error Keychain::KeychainException
+    end
+    it 'should not mutate the given search dictionary' do
+      search_dict = (original_dict = { KSecAttrServer => 'github.com' }).dup
+      Keychain.item search_dict
+      search_dict.should == original_dict
+    end
+    it 'should allow filtering based on attribute key/value pairs' do
+      ret = Keychain.item( KSecAttrServer => 'github.com' )
+      ret[KSecAttrServer].should == 'github.com'
+    end
+    it 'should allow filtering based on search key/value pairs' do
+      ret = Keychain.item( KSecMatchCaseInsensitive => true,
+                           KSecAttrServer => 'Github.COM' )
+      ret[KSecAttrServer].should == 'github.com'
+    end
+    it 'should ignore any additional return type keys' do
+      ret = Keychain.item( KSecReturnData => true )
+      ret.should be_instance_of Keychain::Item
+    end
+  end
 
-    # describe '#password=' do
-    #   before do
-    #     @item.attributes.merge!(
-    #       KSecAttrProtocol => KSecAttrProtocolHTTPS,
-    #       KSecAttrServer   => 'github.com'
-    #     )
-    #   end
-
-    #   it 'should return the updated password' do
-    #     (@item.password = 'new password').should == 'new password'
-    #   end
-
-    #   it 'should update the password in the keychain' do
-    #     (@item.password = 'new password').should == @item.password
-    #   end
-
-    #   it 'should create entries if they do not exsit' do
-    #     @item.attributes.merge!(
-    #       KSecAttrAccount  => 'test'
-    #     )
-    #     @item.password = 'another test'
-    #     @item.exists?.should == true
-    #   end
-
-    #   after do
-    #     NSLog('I created an entry in your keychain that you should clean up')
-    #   end
-    # end
-
-
-    describe '#update!' do
-      it 'should update fields given in the persistent keychain' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.update!({ KSecAttrComment => 'test' })
-        @item.metadata[KSecAttrComment].should == 'test'
-      end
-
-      it 'should raise an exception for non-existant items' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolIRCS,
-          KSecAttrServer   => 'github.com'
-        )
-        expect {
-          @item.update!( KSecAttrComment => 'different test' )
-        }.to raise_exception(Keychain::KeychainException)
-      end
-
-      it 'should update @attributes' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.update!({ KSecAttrComment => 'toast' })
-        @item.attributes[KSecAttrComment].should == 'toast'
-      end
-
-      it 'should return the metadata of the keychain item' do
-        @item.attributes.merge!(
-          KSecAttrProtocol => KSecAttrProtocolHTTPS,
-          KSecAttrServer   => 'github.com'
-        )
-        @item.update!(
-                        KSecAttrComment => 'bread'
-                      )[KSecAttrComment].should == 'bread'
-      end
+  describe '.items' do
+    it 'should return an array' do
+      ret = Keychain.items( KSecAttrServer => 'github.com' )
+      ret.should be_instance_of Array
+    end
+    it 'should return an empty array if nothing is found' do
+      Keychain.items( KSecAttrServer => 'fake.example.org' ).should be_empty
+    end
+    it 'should return an array with Keychain::Item objects in it' do
+      ret = Keychain.items( KSecAttrServer => 'github.com' )
+      ret.first.should be_instance_of Keychain::Item
+    end
+    it 'should return many items if many items are found' do
+      ret = Keychain.items( KSecAttrProtocol => KSecAttrProtocolHTTPS )
+      ret.size.should satisfy { |size| size > 1 }
+    end
+    it 'should raise an error in case of an unexpected result code' do
+      expect {
+        Keychain.items( KSecClass => 'fake class name' )
+      }.to raise_error Keychain::KeychainException
+    end
+    it 'should not mutate the given search dictionary' do
+      search_dict = (original_dict = { KSecAttrServer => 'github.com' }).dup
+      Keychain.items( search_dict )
+      search_dict.should == original_dict
+    end
+    it 'should allow filtering based on attribute key/value pairs' do
+      ret = Keychain.items( KSecAttrServer => 'github.com' )
+      ret.first[KSecAttrServer].should == 'github.com'
+    end
+    it 'should allow filtering based on search key/value pairs' do
+      ret = Keychain.items( KSecMatchCaseInsensitive => true,
+                            KSecAttrServer => 'Github.COM' )
+      ret.first[KSecAttrServer].should == 'github.com'
+    end
+    it 'should ignore any additional return type keys' do
+      ret = Keychain.items( KSecReturnData => true )
+      ret.first.should be_instance_of Keychain::Item
     end
 
   end

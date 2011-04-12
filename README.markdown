@@ -3,15 +3,41 @@ Keychain
 
 A simple class for working with the Mac OS X keychain.
 
+Design Concept
+==============
+
+The API is designed for you to work with the keychain based on
+key/value pair matching.
+
+This is a further distilation of how things work with the new Snow
+Leopard APIs for accessing the keychain. Ideally things now work in a
+much more Rubyish way than they would had you used the originally set
+of C functions.
+
+Basics
+======
+
+There are 4 categories of key/value pairs that you combine to make
+queries.
+
+1. [Item class](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/constant_group/Item_Class_Value_Constants);
+this is a mandatory field; but `mr_keychain` currently will
+automatically add a class of KSecClassInternetPassword for you (since
+that is the only supported class right now).
+2. [Item Attributes](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/uid/TP30000898-CH4g-SW5);
+there can be zero or more of these.
+3. [Search filters](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/uid/TP30000898-CH4g-SW1);
+there can be zero or more of these.
+4. A
+[return type](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html%23//apple_ref/doc/uid/TP30000898-CH4g-SW6);
+there must be at least one of these, but more can be
+specified. However, most methods in `mr_keychain` will set the return
+type for you and prevent you from overriding.
+
 Reference
 =========
 
 To learn more about using the Keychain on OS X, see Apple's [Keychain Services Programming Guide](http://developer.apple.com/library/ios/#documentation/Security/Conceptual/keychainServConcepts/01introduction/introduction.html) and the [Keychain Services Reference](http://developer.apple.com/library/mac/#documentation/Security/Reference/keychainservices/Reference/reference.html).
-
-Tips
-====
-
-* You need to be careful about what key-value pairs you have stored in an item's attributes, they can sometimes mess up searches or cause unexpected failures when saving/updating a keychain item.
 
 Example Usage
 =============
@@ -53,6 +79,19 @@ TODO
 
 - Make the simple cases simpler
 - Allow more succinct names for constants and guess the actual values
+- Allow deleting of keychain items
+
+Caveats
+=======
+
+The APIs that this library depends on can only access to internet
+passwords right now. The interface should remain the same when/if it
+is expanded to include the other types of items that the keychain
+holds.
+
+In order to run the tests on your system, you need to have a specific
+dataset already installed into your keychain; I will eventually
+document the details of this required fixture.
 
 Contributing to keychain
 ========================
@@ -70,4 +109,3 @@ Copyright
 
 Copyright (c) 2011 Mark Rada. See LICENSE.txt for
 further details.
-

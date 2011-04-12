@@ -1,38 +1,38 @@
-require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
 require 'rake'
 
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
-  gem.name = "mr_keychain"
-  gem.homepage = "http://github.com/ferrous26/keychain"
-  gem.license = "MIT"
-  gem.summary = %Q{Example code of how to use the Mac OS X keychain in MacRuby}
-  gem.description = %Q{Takes advantage of MacRuby and uses APIs new in Snow Leopard to create, read, and update keychain entries}
-  gem.email = "marada@uwaterloo.ca"
-  gem.authors = ["Mark Rada"]
-end
-Jeweler::RubygemsDotOrgTasks.new
+task :default => :spec
+task :test    => :spec
 
-require 'rspec/core'
+require 'rake/compiletask'
+Rake::CompileTask.new do |t|
+  t.files = FileList["lib/**/*.rb"]
+  t.verbose = true
+end
+
+desc 'Clean *.rbo files'
+task :clean do
+  FileList["lib/**/*.rbo"].each do |bin|
+    puts "Removing #{bin}"
+    rm bin
+  end
+end
+
+require 'rubygems'
+require 'rubygems/builder'
+require 'rubygems/installer'
+spec = Gem::Specification.load('AXElements.gemspec')
+
+desc 'Build the gem'
+task :build do Gem::Builder.new(spec).build end
+
+desc 'Build the gem and install it'
+task :install => :build do Gem::Installer.new(spec.file_name).install end
+
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.skip_bundler = true
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
-
-# RSpec::Core::RakeTask.new(:rcov) do |spec|
-#   spec.pattern = 'spec/**/*_spec.rb'
-#   spec.rcov = true
-# end
-
-task :default => :spec
 
 require 'yard'
 YARD::Rake::YardocTask.new
