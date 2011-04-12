@@ -12,9 +12,9 @@ module Keychain
     # This method provides a default class, and enforces a return type
     # and match limit; the default key/value pairs:
     #
-    # * KSecClass            => KSecClassInternetPassword
-    # * KSecMatchLimit       => KSecMatchLimitOne
-    # * KSecReturnAttributes => true
+    # * `{ KSecClass            => KSecClassInternetPassword }`
+    # * `{ KSecMatchLimit       => KSecMatchLimitOne }`
+    # * `{ KSecReturnAttributes => true }`
     #
     # The class can be overridden, but the match limit and return type
     # cannot. You can add as many attributes and/or search parameters
