@@ -1,6 +1,6 @@
 # Keychain
 
-A simple class for working with the Mac OS X keychain.
+A simple API for working with the Mac OS X keychain.
 
 ## Design Concept
 
