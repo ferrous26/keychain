@@ -1,5 +1,3 @@
-module Keychain
-
 ##
 # @note Only the {#password} method should ever cause an alert to pop up
 #       and require permission, and this should only happen for keychain
@@ -14,7 +12,7 @@ module Keychain
 #
 # In order to be secure, this class will NEVER cache a password; any time
 # that you change a password, it will be written to the keychain immeadiately.
-class Item
+class Keychain::Item
 
   ##
   # @todo Exploit hash lookup failure blocks to do dynamic attribute lookup
@@ -188,5 +186,4 @@ class Item
     @attributes.select { |key| keys.include?(key) }
   end
 
-end
 end
