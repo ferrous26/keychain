@@ -22,6 +22,7 @@ using MacRuby.
                         'lib/mr_keychain/keychain_exception.rb'
                        ]
   s.test_files       = [
+                        'Rakefile',
                         'spec/spec_helper.rb',
                         'spec/item_spec.rb',
                         'spec/keychain_exception_spec.rb',
@@ -29,7 +30,6 @@ using MacRuby.
                        ]
   s.extra_rdoc_files = [
                         '.yardopts',
-                        'Rakefile',
                         'LICENSE.txt',
                         'README.markdown'
                        ]
