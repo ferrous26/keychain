@@ -5,9 +5,6 @@ Gem::Specification.new do |s|
   s.name    = 'mr_keychain'
   s.version = Keychain::VERSION
 
-  s.required_rubygems_version = Gem::Requirement.new '>= 1.4.2'
-  s.rubygems_version          = Gem::VERSION
-
   s.summary     = 'A wrapper around the Mac OS X keychain for MacRuby'
   s.description = <<-EOS
 Takes advantage of APIs new in Snow Leopard to create, read, and update keychain entries
@@ -17,8 +14,6 @@ using MacRuby.
   s.email         = 'marada@uwaterloo.ca'
   s.homepage      = 'http://github.com/ferrous26/keychain'
   s.licenses      = ['MIT']
-  s.has_rdoc      = 'yard'
-  s.require_paths = ['lib']
 
   s.files            = [
                         'lib/mr_keychain.rb',
