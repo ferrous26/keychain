@@ -1,38 +1,45 @@
-require 'rake'
+require 'rubygems'
 
 task :default => :spec
 task :test    => :spec
 
-require 'rake/compiletask'
-Rake::CompileTask.new do |t|
-  t.files = FileList["lib/**/*.rb"]
-  t.verbose = true
+def safe_require path, name
+  require path
+  yield
+rescue LoadError => e
+  $stderr.puts "It seems as though you do not have #{name} installed."
+  command = ENV['RUBY_VERSION'] ? 'gem' : 'sudo macgem'
+  $stderr.puts "You can install it by running `#{command} install #{name}`."
 end
 
-desc 'Clean *.rbo files'
-task :clean do
-  FileList["lib/**/*.rbo"].each do |bin|
-    puts "Removing #{bin}"
-    rm bin
+if MACRUBY_REVISION.match /^git commit/
+  require 'rake/compiletask'
+  Rake::CompileTask.new do |t|
+    t.files = FileList["lib/**/*.rb"]
+    t.verbose = true
   end
 end
 
-require 'rubygems'
-require 'rubygems/builder'
+require 'rake/gempackagetask'
 require 'rubygems/installer'
-spec = Gem::Specification.load('AXElements.gemspec')
 
-desc 'Build the gem'
-task :build do Gem::Builder.new(spec).build end
+spec = Gem::Specification.load('mr_keychain.gemspec')
 
-desc 'Build the gem and install it'
-task :install => :build do Gem::Installer.new(spec.file_name).install end
+Rake::GemPackageTask.new(spec) { }
 
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.skip_bundler = true
-  spec.pattern = FileList['spec/**/*_spec.rb']
+# This only installs this gem, it does not take deps into consideration
+desc 'Build gem and install it'
+task :install => :gem do
+  Gem::Installer.new("pkg/#{spec.file_name}").install
 end
 
-require 'yard'
-YARD::Rake::YardocTask.new
+safe_require 'rspec/core/rake_task', 'rspec' do
+  RSpec::Core::RakeTask.new(:spec) do |spec|
+    spec.skip_bundler = true
+    spec.ruby_opts    = ['-rspec/spec_helper']
+  end
+end
+
+safe_require 'yard', 'yard' do
+  YARD::Rake::YardocTask.new
+end
